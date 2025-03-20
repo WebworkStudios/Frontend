@@ -124,19 +124,6 @@ nav.active {
     right: 0;
 }
 
-/* Mobile Nav Links - wir behalten diese für eventuelle zukünftige Menüpunkte */
-.mobile-nav a {
-    display: block;
-    color: var(--text-muted);
-    padding: 12px 0;
-    font-size: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mobile-nav a:hover {
-    color: var(--light);
-}
-
 /* Auth Buttons */
 .auth-buttons {
     display: flex;

@@ -27,6 +27,10 @@
     --z-index-cookie-notice: 9999;
     --font-primary: "Montserrat", sans-serif;
     --font-heading: "Playfair Display", serif;
+    --info: #3498db;
+    --warning: #f39c12;
+    --success: var(--secondary);
+    --error: #f33;
 }
 
 * {

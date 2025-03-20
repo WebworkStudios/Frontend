@@ -827,19 +827,19 @@
 }
 
 .toast-info {
-    border-left: 3px solid #3498db;
+    border-left: 3px solid var(--info);
 }
 
 .toast-info .toast-icon {
-    color: #3498db;
+    color: var(--info);
 }
 
 .toast-warning {
-    border-left: 3px solid #f39c12;
+    border-left: 3px solid var(--warning);
 }
 
 .toast-warning .toast-icon {
-    color: #f39c12;
+    color: var(--warning);
 }
 
 /* Modal */

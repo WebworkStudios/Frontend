@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initCTAButton();
     initFormValidation();
     initImageErrorHandling();
+    initToastContainer();
 });
 
 // Initialize CTA button
@@ -22,8 +23,7 @@ function initCTAButton() {
 
     if (registerCTABtn && registerModal) {
         registerCTABtn.addEventListener('click', function () {
-            registerModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            openModal(registerModal);
         });
     }
 }
@@ -114,6 +114,20 @@ function initLanguageSelector() {
     }
 }
 
+function openModal(modal) {
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Hilfsfunktion zum Schließen aller Modals
+function closeAllModals() {
+    if (loginModal) loginModal.style.display = 'none';
+    if (registerModal) registerModal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
 // Modals
 function initModals() {
     const loginBtn = document.querySelector('.login-btn');
@@ -123,21 +137,6 @@ function initModals() {
     const showLogin = document.querySelector('.show-login');
     const loginModal = document.getElementById('loginModal');
     const registerModal = document.getElementById('registerModal');
-
-    // Hilfsfunktion zum Öffnen eines Modals
-    function openModal(modal) {
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    // Hilfsfunktion zum Schließen aller Modals
-    function closeAllModals() {
-        if (loginModal) loginModal.style.display = 'none';
-        if (registerModal) registerModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
 
     if (loginBtn && loginModal) {
         loginBtn.addEventListener('click', function (e) {
@@ -365,6 +364,14 @@ function initPasswordStrength() {
     }
 }
 
+// Allgemeine Funktion für Event-Binding
+function bindEvent(element, eventType, handler) {
+    if (element) {
+        element.addEventListener(eventType, handler);
+    }
+}
+
+// Cookie Banner
 // Cookie Banner
 function initCookieBanner() {
     const cookieBanner = document.getElementById('cookie-banner');
@@ -384,15 +391,11 @@ function initCookieBanner() {
         return;
     }
 
-    // Details ein-/ausblenden
-    if (detailsToggle && detailsContent) {
-        detailsToggle.addEventListener('click', function () {
-            detailsContent.classList.toggle('active');
-            this.classList.toggle('active');
-            const expanded = this.getAttribute('aria-expanded') === 'true' || false;
-            this.setAttribute('aria-expanded', !expanded);
-            this.querySelector('.toggle-text').textContent = expanded ? 'Details anzeigen' : 'Details ausblenden';
-        });
+    // Allgemeine Funktion für Event-Binding
+    function bindEvent(element, eventType, handler) {
+        if (element) {
+            element.addEventListener(eventType, handler);
+        }
     }
 
     // Hilfsfunktion zum Speichern der Cookie-Einstellungen
@@ -403,32 +406,45 @@ function initCookieBanner() {
         cookieBanner.style.display = 'none';
     }
 
+    // Details ein-/ausblenden
+    bindEvent(detailsToggle, 'click', function () {
+        detailsContent.classList.toggle('active');
+        this.classList.toggle('active');
+        const expanded = this.getAttribute('aria-expanded') === 'true' || false;
+        this.setAttribute('aria-expanded', !expanded);
+        this.querySelector('.toggle-text').textContent = expanded ? 'Details anzeigen' : 'Details ausblenden';
+    });
+
     // Alle Cookies akzeptieren
-    if (acceptAllButton) {
-        acceptAllButton.addEventListener('click', function () {
-            if (analyticsCheckbox) analyticsCheckbox.checked = true;
-            if (marketingCheckbox) marketingCheckbox.checked = true;
-            saveCookiePreferences(true, true);
-            showToast('Alle Cookies wurden akzeptiert', 'success');
-        });
-    }
+    bindEvent(acceptAllButton, 'click', function () {
+        if (analyticsCheckbox) analyticsCheckbox.checked = true;
+        if (marketingCheckbox) marketingCheckbox.checked = true;
+        saveCookiePreferences(true, true);
+        showToast('Alle Cookies wurden akzeptiert', 'success');
+    });
 
     // Nur notwendige Cookies akzeptieren
-    if (acceptNecessaryButton) {
-        acceptNecessaryButton.addEventListener('click', function () {
-            if (analyticsCheckbox) analyticsCheckbox.checked = false;
-            if (marketingCheckbox) marketingCheckbox.checked = false;
-            saveCookiePreferences(false, false);
-            showToast('Nur notwendige Cookies wurden akzeptiert', 'info');
-        });
-    }
+    bindEvent(acceptNecessaryButton, 'click', function () {
+        if (analyticsCheckbox) analyticsCheckbox.checked = false;
+        if (marketingCheckbox) marketingCheckbox.checked = false;
+        saveCookiePreferences(false, false);
+        showToast('Nur notwendige Cookies wurden akzeptiert', 'info');
+    });
 
     // Benutzerdefinierte Cookie-Einstellungen speichern
-    if (saveSettingsButton && analyticsCheckbox && marketingCheckbox) {
-        saveSettingsButton.addEventListener('click', function () {
-            saveCookiePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-            showToast('Deine Cookie-Einstellungen wurden gespeichert', 'success');
-        });
+    bindEvent(saveSettingsButton, 'click', function () {
+        saveCookiePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+        showToast('Deine Cookie-Einstellungen wurden gespeichert', 'success');
+    });
+}
+
+// Funktion zum Initialisieren des Toast-Containers
+function initToastContainer() {
+    if (!document.getElementById('toast-container')) {
+        const toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
     }
 }
 
@@ -569,14 +585,42 @@ function initFormValidation() {
     const loginForm = document.querySelector('.login-form');
     const registerForm = document.querySelector('.register-form');
 
+    // Allgemeine Funktion zur Überprüfung leerer Felder
+    function validateRequiredFields(form, fields) {
+        for (const field of fields) {
+            const value = form.querySelector(field).value.trim();
+            if (!value) {
+                showToast('Bitte fülle alle Felder aus', 'error');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Funktion zur Validierung einer E-Mail-Adresse
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showToast('Bitte gib eine gültige E-Mail-Adresse ein', 'error');
+            return false;
+        }
+        return true;
+    }
+
+    // Funktion zur Validierung übereinstimmender Passwörter
+    function validateMatchingPasswords(password, confirmPassword) {
+        if (password !== confirmPassword) {
+            showToast('Die Passwörter stimmen nicht überein', 'error');
+            return false;
+        }
+        return true;
+    }
+
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const username = this.querySelector('#username').value.trim();
-            const password = this.querySelector('#password').value.trim();
 
-            if (!username || !password) {
-                showToast('Bitte fülle alle Felder aus', 'error');
+            if (!validateRequiredFields(this, ['#username', '#password'])) {
                 return;
             }
 
@@ -593,31 +637,26 @@ function initFormValidation() {
     if (registerForm) {
         registerForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const username = this.querySelector('#reg-username').value.trim();
+
+            if (!validateRequiredFields(this, ['#reg-username', '#email', '#reg-password', '#confirm-password'])) {
+                return;
+            }
+
             const email = this.querySelector('#email').value.trim();
             const password = this.querySelector('#reg-password').value.trim();
             const confirmPassword = this.querySelector('#confirm-password').value.trim();
             const termsAccepted = this.querySelector('#terms').checked;
 
-            if (!username || !email || !password || !confirmPassword) {
-                showToast('Bitte fülle alle Felder aus', 'error');
+            if (!validateEmail(email)) {
                 return;
             }
 
-            if (password !== confirmPassword) {
-                showToast('Die Passwörter stimmen nicht überein', 'error');
+            if (!validateMatchingPasswords(password, confirmPassword)) {
                 return;
             }
 
             if (!termsAccepted) {
                 showToast('Bitte akzeptiere die AGB und Datenschutzbestimmungen', 'error');
-                return;
-            }
-
-            // E-Mail-Format validieren
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showToast('Bitte gib eine gültige E-Mail-Adresse ein', 'error');
                 return;
             }
 
