@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kickerscup</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Background Container -->
+<div class="bg-container">
+    <div class="bg-overlay"></div>
+    <div class="bg-image"></div>
+</div>
+
+<!-- Header -->
+<header>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile Menu Overlay zum Schließen -->
+    <div class="mobile-menu-overlay"></div>
+
+    <nav>
+        <!-- Der Close-Button wird durch JavaScript hinzugefügt, wenn er noch nicht existiert -->
+        <button class="mobile-close-btn" aria-label="Menü schließen">&times;</button>
+
+        <!-- Updated Language Selector with CDN Flags -->
+        <div class="lang-switch">
+            <button type="button" class="lang-selector" aria-expanded="false" aria-haspopup="true">
+                <img src="https://flagcdn.com/w20/de.png" alt="DE Flag" class="flag-icon">
+                <span class="current-lang">DE</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-dropdown" role="menu">
+                <a href="#" class="lang-option active" role="menuitem">
+                    <img src="https://flagcdn.com/w20/de.png" alt="DE Flag" class="flag-icon">
+                    Deutsch
+                </a>
+                <a href="#" class="lang-option" role="menuitem">
+                    <img src="https://flagcdn.com/w20/gb.png" alt="GB Flag" class="flag-icon">
+                    English
+                </a>
+                <a href="#" class="lang-option" role="menuitem">
+                    <img src="https://flagcdn.com/w20/fr.png" alt="FR Flag" class="flag-icon">
+                    Français
+                </a>
+                <a href="#" class="lang-option" role="menuitem">
+                    <img src="https://flagcdn.com/w20/es.png" alt="ES Flag" class="flag-icon">
+                    Español
+                </a>
+            </div>
+        </div>
+
+        <div class="auth-buttons">
+            <a href="#" class="login-btn"><i class="fas fa-user"></i> Login</a>
+            <a href="#" class="register-btn">Registrieren</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Login Modal - Neue Version -->
+<div id="loginModal" class="modal" aria-labelledby="loginModalTitle" role="dialog" aria-hidden="true">
+    <div class="modal-content split-modal">
+        <span class="close-modal" aria-label="Schließen">&times;</span>
+
+        <!-- Image Side -->
+        <div class="modal-image">
+            <div class="overlay"></div>
+            <div class="modal-text-overlay">
+                <h2>Willkommen zurück!</h2>
+                <p>Logge dich ein und führe deinen Spieler zum Sieg.</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="modal-form">
+            <div class="logo-container">
+                <img src="img/player.png" alt="Kickerscup Logo" class="auth-logo">
+            </div>
+            <h2 id="loginModalTitle">Login</h2>
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="username">Benutzername</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="username" name="username" required placeholder="Dein Benutzername">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Passwort</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="password" name="password" required placeholder="Dein Passwort">
+                        <button type="button" class="toggle-password" aria-label="Passwort anzeigen">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group form-checkbox">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Angemeldet bleiben</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Einloggen</button>
+
+                <div class="social-login">
+                    <p>Oder einloggen mit</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="button" class="social-btn discord">
+                            <i class="fab fa-discord"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-links">
+                    <a href="#">Passwort vergessen?</a>
+                    <a href="#" class="show-register">Noch kein Konto? Registrieren</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Register Modal - Neue Version -->
+<div id="registerModal" class="modal" aria-labelledby="registerModalTitle" role="dialog" aria-hidden="true">
+    <div class="modal-content split-modal">
+        <span class="close-modal" aria-label="Schließen">&times;</span>
+
+        <!-- Form Side -->
+        <div class="modal-form">
+            <div class="logo-container">
+                <img src="img/player.png" alt="Kickerscup Logo" class="auth-logo">
+            </div>
+            <h2 id="registerModalTitle">Registrieren</h2>
+            <form class="register-form">
+                <div class="form-group">
+                    <label for="reg-username">Benutzername</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="reg-username" name="username" required
+                               placeholder="Wähle einen Benutzernamen">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-Mail</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <input type="email" id="email" name="email" required placeholder="Deine E-Mail-Adresse">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Passwort</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="reg-password" name="password" required
+                               placeholder="Erstelle ein sicheres Passwort">
+                        <button type="button" class="toggle-password" aria-label="Passwort anzeigen">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-progress"></div>
+                        </div>
+                        <span class="strength-text">Passwort-Stärke: Zu schwach</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Passwort bestätigen</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="confirm-password" name="confirm-password" required
+                               placeholder="Passwort wiederholen">
+                    </div>
+                </div>
+                <div class="form-group form-checkbox">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">Ich akzeptiere die <a href="agb.html">AGBs</a> und <a href="datenschutz.html">Datenschutzbestimmungen</a></label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Konto erstellen</button>
+                <div class="form-links">
+                    <a href="#" class="show-login">Bereits registriert? Login</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Image Side -->
+        <div class="modal-image">
+            <div class="overlay"></div>
+            <div class="modal-text-overlay">
+                <h2>Werde Teil der Community!</h2>
+                <p>Erstelle dein Konto und starte deine Karriere als Fußballstar.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="elegant-container">
+            <!-- Player Icon -->
+            <!-- Player Icon -->
+            <div class="player-icon animate-fadeUp" aria-hidden="true">
+                <img src="img/player.png" alt="Player Icon">
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="animate-fadeUp delay-1">VOM UNDERDOG ZUR LEGENDE</h1>
+
+            <!-- Description -->
+            <p class="description animate-fadeUp delay-2">
+                Übernimm das Ruder deines eigenen Fußballclubs! Stelle dein Team auf, entwickle deine Taktik und kämpfe
+                um Titel in der Welt des virtuellen Fußballs. Dein Klub, deine Regeln, dein Erfolg!
+            </p>
+
+            <!-- Call to Action Buttons -->
+            <!-- Call to Action Buttons -->
+            <div class="cta-buttons animate-fadeUp delay-3">
+                <button class="btn btn-primary pulse btn-large show-register-cta">
+                    Jetzt kostenlos mitspielen
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Aktuelle Statistiken</h2>
+                <div class="elegant-divider"></div>
+                <p>Entdecke die Vielfalt der Kickerscup-Community und werde Teil einer wachsenden Welt des virtuellen
+                    Fußballs.</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-item animate-fadeUp">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value" id="manager-count">12,487</div>
+                    <div class="stat-label">Manager</div>
+                </div>
+                <div class="stat-item animate-fadeUp delay-1">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value" id="leagues-count">248</div>
+                    <div class="stat-label">Ligen</div>
+                </div>
+                <div class="stat-item animate-fadeUp delay-2">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="online-count">1,872</div>
+                    <div class="stat-label">Aktuell Online</div>
+                </div>
+                <div class="stat-item animate-fadeUp delay-3">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-value" id="season-count">37</div>
+                    <div class="stat-label">Aktuelle Saison</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Entdecke unsere Features</h2>
+                <div class="elegant-divider"></div>
+                <p>Erlebe ein umfassendes Fußball-Management-Erlebnis mit erstklassigen Features, die deine virtuelle
+                    Karriere vorantreiben.</p>
+            </div>
+
+            <div class="features-container">
+                <article class="feature-item animate-fadeUp">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Karrieresystem">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Karrieresystem</h3>
+                        <p>Beginne als junges Talent und arbeite dich durch verschiedene Ligen und Vereine. Entwickle
+                            deine Fähigkeiten, verdiene Auszeichnungen und werde zur Fußballlegende.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-1">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Live-Matches">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Live-Matches</h3>
+                        <p>Erlebe packende Echtzeit-Matches gegen andere Spieler. Triff taktische Entscheidungen, führe
+                            deinen Spieler über das Feld und erziele spektakuläre Tore.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-2">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Trainingsystem">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Trainingsystem</h3>
+                        <p>Entwickle deinen Spieler mit individuellen Trainingsplänen. Verbessere Technik, Ausdauer,
+                            Stärke und taktisches Verständnis durch spezielle Übungen.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Transfermarkt">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Transfermarkt</h3>
+                        <p>Verhandle Verträge mit Vereinen, wechsle zu stärkeren Teams und erhöhe deinen Marktwert.
+                            Reagiere auf Angebote und finde den perfekten Verein für deine Karriere.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-1">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Community">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Community</h3>
+                        <p>Tritt Spieler-Allianzen bei, chatte mit anderen Fußballfans und nimm an Turnieren teil. Baue
+                            Freundschaften auf und entwickle gemeinsame Strategien.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-2">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Statistiken">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Statistiken</h3>
+                        <p>Verfolge detaillierte Statistiken zu deiner Spielerkarriere. Analysiere deine Leistungen,
+                            erkenne Stärken und Schwächen und optimiere dein Spiel.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="countdown-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Neue Saison startet in</h2>
+                <div class="elegant-divider"></div>
+                <p>Sei bereit für den Anpfiff der nächsten Saison. Stelle dein Team zusammen und kämpfe um den
+                    Titel.</p>
+            </div>
+
+            <div class="countdown-container animate-fadeUp delay-1">
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-days">00</div>
+                        <div class="countdown-label">Tage</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-hours">00</div>
+                        <div class="countdown-label">Stunden</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-minutes">00</div>
+                        <div class="countdown-label">Minuten</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-seconds">00</div>
+                        <div class="countdown-label">Sekunden</div>
+                    </div>
+                </div>
+                <div class="next-season-info" id="next-season-date">Nächste Saison beginnt am 01. April 2025 um 18:15
+                    Uhr
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Häufig gestellte Fragen</h2>
+                <div class="elegant-divider"></div>
+                <p>Finde Antworten auf die am häufigsten gestellten Fragen zu Kickerscup und starte perfekt vorbereitet
+                    in deine Karriere.</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item animate-fadeUp">
+                    <div class="faq-question">
+                        Wie starte ich mein Spiel bei Kickerscup?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Um bei Kickerscup zu starten, registriere dich kostenlos, erstelle deinen eigenen Spieler
+                            und folge dem Tutorial. Anschließend kannst du an Trainingsspielen teilnehmen, deine
+                            Fähigkeiten verbessern und in deiner ersten Liga antreten.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-1">
+                    <div class="faq-question">
+                        Ist Kickerscup wirklich kostenlos spielbar?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Ja, Kickerscup ist vollständig kostenlos spielbar. Alle Hauptfunktionen des Spiels können
+                            ohne Zahlung genutzt werden. Es gibt optionale Premium-Features, die das Spielerlebnis
+                            erweitern können, aber diese sind nicht notwendig, um Erfolg zu haben.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-2">
+                    <div class="faq-question">
+                        Wie funktionieren die Transfers zwischen den Vereinen?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Transfers bei Kickerscup werden wie im echten Fußball gehandhabt. Vereine können Angebote
+                            für dich abgeben, die du annehmen oder ablehnen kannst. Alternativ kannst du dich selbst bei
+                            Vereinen bewerben. Dein Marktwert steigt mit deinen Leistungen und deiner Erfahrung.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-3">
+                    <div class="faq-question">
+                        Wie lange dauert eine Saison im Spiel?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Eine Saison bei Kickerscup dauert genau 30 Tage. Am 1. jedes Monats beginnt eine neue
+                            Saison. In dieser Zeit spielst du Liga- und Pokalspiele, nimmst an Turnieren teil und
+                            entwickelst deinen Spieler weiter.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-4">
+                    <div class="faq-question">
+                        Kann ich mit Freunden zusammen in einem Team spielen?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Ja, Kickerscup ermöglicht es dir, mit Freunden im selben Verein zu spielen. Ihr könnt auch
+                            eigene Teams gründen und gemeinsam aufsteigen. Nutze die Freundschaftsfunktion und
+                            Teameinladungen, um mit Freunden zusammenzuspielen.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Cookie-Banner -->
+<div id="cookie-banner" class="cookie-banner" role="alert" aria-labelledby="cookie-title">
+    <div class="cookie-content">
+        <div class="cookie-header">
+            <h3 id="cookie-title">Cookie-Einstellungen</h3>
+            <button id="cookie-details-toggle" class="cookie-details-toggle" aria-expanded="false"
+                    aria-controls="cookie-details">
+                <span class="toggle-text">Details anzeigen</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+
+        <p>Wir verwenden Cookies, um Dir die bestmögliche Erfahrung auf unserer Website zu bieten. Mehr Informationen
+            findest Du in unserer <a href="#">Datenschutzerklärung</a>.</p>
+
+        <div id="cookie-details" class="cookie-details">
+            <div class="cookie-option">
+                <div>
+                    <h4>Notwendige Cookies</h4>
+                    <p>Diese Cookies sind für das Funktionieren der Website erforderlich und können nicht deaktiviert
+                        werden.</p>
+                </div>
+                <div class="cookie-switch disabled">
+                    <input type="checkbox" id="necessary" checked disabled>
+                    <label for="necessary"></label>
+                </div>
+            </div>
+
+            <div class="cookie-option">
+                <div>
+                    <h4>Analytische Cookies</h4>
+                    <p>Helfen uns zu verstehen, wie Besucher mit unserer Website interagieren.</p>
+                </div>
+                <div class="cookie-switch">
+                    <input type="checkbox" id="analytics">
+                    <label for="analytics"></label>
+                </div>
+            </div>
+
+            <div class="cookie-option">
+                <div>
+                    <h4>Marketing-Cookies</h4>
+                    <p>Werden verwendet, um Besuchern auf anderen Websites relevante Anzeigen zu zeigen.</p>
+                </div>
+                <div class="cookie-switch">
+                    <input type="checkbox" id="marketing">
+                    <label for="marketing"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="cookie-actions">
+            <button id="accept-all-cookies" class="btn btn-primary">Alle akzeptieren</button>
+            <button id="accept-necessary-cookies" class="btn cookie-btn-secondary">Nur notwendige</button>
+            <button id="save-cookie-settings" class="btn cookie-btn-secondary">Einstellungen speichern</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast-Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-container">
+        <div class="social-links">
+            <span>Folge uns:</span>
+            <a href="#" class="social-icon" aria-label="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-icon" aria-label="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+
+        <div class="footer-links">
+            <a href="changelog.html">Changelog</a>
+            <a href="datenschutz.html">Datenschutz</a>
+            <a href="agb.html">AGB</a>
+            <a href="impressum.html">Impressum</a>
+        </div>
+
+        <div class="footer-copyright">
+            © 2025 Kickerscup <span class="with-love">Mit <span
+                class="heart">♥</span> in Deutschland entwickelt</span><span class="version">v1.2.5</span>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript einbinden -->
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,547 @@
+// main.js
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize components
+    initMobileMenu();
+    initLanguageSelector();
+    initModals();
+    initFAQAccordion();
+    initCountdown();
+    initPasswordToggle();
+    initPasswordStrength();
+    initCookieBanner();
+    initAnimations();
+    initCTAButton();
+});
+
+// Initialize CTA button
+function initCTAButton() {
+    const registerCTABtn = document.querySelector('.show-register-cta');
+    const registerModal = document.getElementById('registerModal');
+
+    if (registerCTABtn && registerModal) {
+        registerCTABtn.addEventListener('click', function () {
+            registerModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+    }
+}
+
+// Mobile Menu
+function initMobileMenu() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileCloseBtn = document.querySelector('.mobile-close-btn');
+    const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+    const nav = document.querySelector('nav');
+    const body = document.body;
+
+    if (mobileMenuToggle && nav) {
+        mobileMenuToggle.addEventListener('click', function () {
+            this.classList.toggle('active');
+            nav.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+            body.classList.toggle('mobile-menu-open');
+        });
+    }
+
+    if (mobileCloseBtn && nav) {
+        mobileCloseBtn.addEventListener('click', function () {
+            mobileMenuToggle.classList.remove('active');
+            nav.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            body.classList.remove('mobile-menu-open');
+        });
+    }
+
+    if (mobileMenuOverlay && nav) {
+        mobileMenuOverlay.addEventListener('click', function () {
+            mobileMenuToggle.classList.remove('active');
+            nav.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            body.classList.remove('mobile-menu-open');
+        });
+    }
+}
+
+// Language Selector
+function initLanguageSelector() {
+    const langSelector = document.querySelector('.lang-selector');
+    const langDropdown = document.querySelector('.lang-dropdown');
+    const langOptions = document.querySelectorAll('.lang-option');
+    const currentLang = document.querySelector('.current-lang');
+    const flagIcon = document.querySelector('.lang-selector .flag-icon');
+
+    if (langSelector && langDropdown) {
+        langSelector.addEventListener('click', function (e) {
+            e.preventDefault();
+            langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
+            this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!langSelector.contains(e.target)) {
+                langDropdown.style.display = 'none';
+                langSelector.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        langOptions.forEach(function (option) {
+            option.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all options
+                langOptions.forEach(opt => opt.classList.remove('active'));
+
+                // Add active class to clicked option
+                this.classList.add('active');
+
+                // Update current language display
+                const selectedLang = this.textContent.trim().substring(0, 2).toUpperCase();
+                currentLang.textContent = selectedLang;
+
+                // Update flag
+                const newFlagSrc = this.querySelector('.flag-icon').src;
+                flagIcon.src = newFlagSrc;
+
+                // Close dropdown
+                langDropdown.style.display = 'none';
+                langSelector.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+}
+
+// Modals
+function initModals() {
+    const loginBtn = document.querySelector('.login-btn');
+    const registerBtn = document.querySelector('.register-btn');
+    const closeModals = document.querySelectorAll('.close-modal');
+    const showRegister = document.querySelector('.show-register');
+    const showLogin = document.querySelector('.show-login');
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    if (registerBtn && registerModal) {
+        registerBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            registerModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    if (closeModals) {
+        closeModals.forEach(function (closeBtn) {
+            closeBtn.addEventListener('click', function () {
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'none';
+                document.body.style.overflow = '';
+            });
+        });
+    }
+
+    if (showRegister && registerModal && loginModal) {
+        showRegister.addEventListener('click', function (e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
+        });
+    }
+
+    if (showLogin && loginModal && registerModal) {
+        showLogin.addEventListener('click', function (e) {
+            e.preventDefault();
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+    }
+
+    // Close modals when clicking outside the content
+    window.addEventListener('click', function (e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        if (e.target === registerModal) {
+            registerModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// FAQ Accordion
+function initFAQAccordion() {
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    if (faqItems.length) {
+        faqItems.forEach(function (item) {
+            const question = item.querySelector('.faq-question');
+
+            question.addEventListener('click', function () {
+                // Toggle active class
+                item.classList.toggle('active');
+
+                // Close other items
+                faqItems.forEach(function (otherItem) {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    }
+}
+
+// Countdown timer
+function initCountdown() {
+    function getNextSeasonDate() {
+        const now = new Date();
+        let nextMonth = now.getMonth() + 1;
+        let nextYear = now.getFullYear();
+
+        if (nextMonth > 11) {
+            nextMonth = 0;
+            nextYear++;
+        }
+
+        // Set date to first day of next month at 18:15
+        const nextSeasonDate = new Date(nextYear, nextMonth, 1, 18, 15, 0);
+
+        // Check if current date is after the 1st of the current month at 18:15
+        if (now.getDate() > 1 || (now.getDate() === 1 && now.getHours() >= 18 && now.getMinutes() >= 15)) {
+            return nextSeasonDate;
+        } else {
+            // If it's still before or on the 1st at 18:15, use the current month's date
+            return new Date(now.getFullYear(), now.getMonth(), 1, 18, 15, 0);
+        }
+    }
+
+    function updateCountdown() {
+        const countdownDays = document.getElementById('countdown-days');
+        const countdownHours = document.getElementById('countdown-hours');
+        const countdownMinutes = document.getElementById('countdown-minutes');
+        const countdownSeconds = document.getElementById('countdown-seconds');
+        const nextSeasonDate = document.getElementById('next-season-date');
+
+        if (countdownDays && countdownHours && countdownMinutes && countdownSeconds) {
+            const nextSeason = getNextSeasonDate();
+            const now = new Date();
+            const diff = nextSeason - now;
+
+            // Calculate days, hours, minutes and seconds
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // Update the display
+            countdownDays.textContent = days.toString().padStart(2, '0');
+            countdownHours.textContent = hours.toString().padStart(2, '0');
+            countdownMinutes.textContent = minutes.toString().padStart(2, '0');
+            countdownSeconds.textContent = seconds.toString().padStart(2, '0');
+
+            // Update next season date text
+            if (nextSeasonDate) {
+                const monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+                nextSeasonDate.textContent = `Nächste Saison beginnt am 01. ${monthNames[nextSeason.getMonth()]} ${nextSeason.getFullYear()} um 18:15 Uhr`;
+            }
+        }
+    }
+
+    // Initialize countdown
+    updateCountdown();
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
+}
+
+// Password toggle visibility
+function initPasswordToggle() {
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+
+    if (toggleButtons.length) {
+        toggleButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const passwordField = this.previousElementSibling;
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+
+                // Change icon
+                const icon = this.querySelector('i');
+                if (type === 'text') {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+    }
+}
+
+// Password strength meter
+function initPasswordStrength() {
+    const passwordField = document.getElementById('reg-password');
+    const strengthBar = document.querySelector('.strength-progress');
+    const strengthText = document.querySelector('.strength-text');
+
+    if (passwordField && strengthBar && strengthText) {
+        passwordField.addEventListener('input', function () {
+            const password = this.value;
+            const strength = checkPasswordStrength(password);
+
+            // Update progress bar
+            strengthBar.style.width = strength.percentage + '%';
+            strengthBar.style.background = strength.color;
+
+            // Update text
+            strengthText.textContent = 'Passwort-Stärke: ' + strength.text;
+        });
+    }
+
+    // Function to check password strength
+    function checkPasswordStrength(password) {
+        let strength = {
+            percentage: 0,
+            color: '#ff3333',
+            text: 'Zu schwach'
+        };
+
+        // Check length
+        if (password.length >= 8) {
+            strength.percentage += 20;
+        }
+
+        // Check for uppercase letters
+        if (/[A-Z]/.test(password)) {
+            strength.percentage += 20;
+        }
+
+        // Check for lowercase letters
+        if (/[a-z]/.test(password)) {
+            strength.percentage += 20;
+        }
+
+        // Check for numbers
+        if (/[0-9]/.test(password)) {
+            strength.percentage += 20;
+        }
+
+        // Check for special characters
+        if (/[^A-Za-z0-9]/.test(password)) {
+            strength.percentage += 20;
+        }
+
+        // Determine text and color based on percentage
+        if (strength.percentage >= 80) {
+            strength.text = 'Sehr stark';
+            strength.color = '#4cd137';
+        } else if (strength.percentage >= 60) {
+            strength.text = 'Stark';
+            strength.color = '#7bed9f';
+        } else if (strength.percentage >= 40) {
+            strength.text = 'Mittel';
+            strength.color = '#ffb142';
+        } else if (strength.percentage >= 20) {
+            strength.text = 'Schwach';
+            strength.color = '#ff793f';
+        }
+
+        return strength;
+    }
+}
+
+// Cookie Banner
+function initCookieBanner() {
+    const cookieBanner = document.getElementById('cookie-banner');
+    const acceptAllButton = document.getElementById('accept-all-cookies');
+    const acceptNecessaryButton = document.getElementById('accept-necessary-cookies');
+    const saveSettingsButton = document.getElementById('save-cookie-settings');
+    const detailsToggle = document.getElementById('cookie-details-toggle');
+    const detailsContent = document.getElementById('cookie-details');
+
+    if (cookieBanner) {
+        // Check if user has already set cookie preferences
+        if (localStorage.getItem('cookiesAccepted')) {
+            cookieBanner.style.display = 'none';
+        }
+
+        // Toggle cookie details
+        if (detailsToggle && detailsContent) {
+            detailsToggle.addEventListener('click', function () {
+                detailsContent.classList.toggle('active');
+                this.classList.toggle('active');
+                const expanded = this.getAttribute('aria-expanded') === 'true' || false;
+                this.setAttribute('aria-expanded', !expanded);
+                this.querySelector('.toggle-text').textContent = expanded ? 'Details anzeigen' : 'Details ausblenden';
+            });
+        }
+
+        // Accept all cookies
+        if (acceptAllButton) {
+            acceptAllButton.addEventListener('click', function () {
+                document.getElementById('analytics').checked = true;
+                document.getElementById('marketing').checked = true;
+                saveCookiePreferences();
+                cookieBanner.style.display = 'none';
+                showToast('Alle Cookies wurden akzeptiert', 'success');
+            });
+        }
+
+        // Accept only necessary cookies
+        if (acceptNecessaryButton) {
+            acceptNecessaryButton.addEventListener('click', function () {
+                document.getElementById('analytics').checked = false;
+                document.getElementById('marketing').checked = false;
+                saveCookiePreferences();
+                cookieBanner.style.display = 'none';
+                showToast('Nur notwendige Cookies wurden akzeptiert', 'info');
+            });
+        }
+
+        // Save custom cookie settings
+        if (saveSettingsButton) {
+            saveSettingsButton.addEventListener('click', function () {
+                saveCookiePreferences();
+                cookieBanner.style.display = 'none';
+                showToast('Deine Cookie-Einstellungen wurden gespeichert', 'success');
+            });
+        }
+
+        function saveCookiePreferences() {
+            const analyticsAccepted = document.getElementById('analytics').checked;
+            const marketingAccepted = document.getElementById('marketing').checked;
+
+            // Save preferences to localStorage
+            localStorage.setItem('cookiesAccepted', 'true');
+            localStorage.setItem('analyticsCookies', analyticsAccepted);
+            localStorage.setItem('marketingCookies', marketingAccepted);
+        }
+    }
+}
+
+// Show toast notifications
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toast-container');
+
+    if (toastContainer) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        let iconClass = '';
+        switch (type) {
+            case 'success':
+                iconClass = 'fa-check-circle';
+                break;
+            case 'error':
+                iconClass = 'fa-exclamation-circle';
+                break;
+            case 'warning':
+                iconClass = 'fa-exclamation-triangle';
+                break;
+            case 'info':
+            default:
+                iconClass = 'fa-info-circle';
+                break;
+        }
+
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas ${iconClass}"></i>
+            </div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close">&times;</button>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Show toast
+        setTimeout(() => toast.classList.add('show'), 10);
+
+        // Auto-hide toast after 5 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+
+        // Close button functionality
+        toast.querySelector('.toast-close').addEventListener('click', function () {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        });
+    }
+}
+
+// Scroll animations
+function initAnimations() {
+    const animatedElements = document.querySelectorAll('.animate-fadeUp');
+
+    function revealOnScroll() {
+        animatedElements.forEach(function (element) {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementBottom = element.getBoundingClientRect().bottom;
+            const isVisible = (elementTop < window.innerHeight - 50) && (elementBottom > 0);
+
+            if (isVisible) {
+                element.style.animationPlayState = 'running';
+            }
+        });
+    }
+
+    // Check elements on load
+    revealOnScroll();
+
+    // Check elements on scroll
+    window.addEventListener('scroll', revealOnScroll);
+
+    // Stats counter animation
+    function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            element.textContent = Math.floor(progress * (end - start) + start).toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    // Function to check if element is in viewport
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    // Animate stats when they come into view
+    const statsSection = document.querySelector('.stats-section');
+    let statsAnimated = false;
+
+    function checkStats() {
+        if (!statsAnimated && statsSection && isElementInViewport(statsSection)) {
+            animateValue(document.getElementById('manager-count'), 0, 12487, 2000);
+            animateValue(document.getElementById('leagues-count'), 0, 248, 2000);
+            animateValue(document.getElementById('online-count'), 0, 1872, 2000);
+            animateValue(document.getElementById('season-count'), 0, 37, 2000);
+            statsAnimated = true;
+        }
+    }
+
+    // Initial check
+    checkStats();
+
+    // Check on scroll
+    window.addEventListener('scroll', checkStats);
+}
