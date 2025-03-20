@@ -386,7 +386,7 @@ function initCookieBanner() {
     if (!cookieBanner) return;
 
     // Prüfen, ob Cookies bereits akzeptiert wurden
-    if (localStorage.getItem('cookiesAccepted')) {
+    if (localStorage.getItem('cookiesAccepted') === 'true') {
         cookieBanner.style.display = 'none';
         return;
     }
