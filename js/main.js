@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
     initCookieBanner();
     initAnimations();
     initCTAButton();
+    initFormValidation();
+    initImageErrorHandling();
 });
 
 // Initialize CTA button
@@ -43,6 +45,7 @@ function initMobileMenu() {
         });
     }
 
+    // Der Button ist bereits im HTML definiert, wir müssen nur den Event Listener hinzufügen
     if (mobileCloseBtn && nav) {
         mobileCloseBtn.addEventListener('click', function () {
             mobileMenuToggle.classList.remove('active');
@@ -78,7 +81,8 @@ function initLanguageSelector() {
         });
 
         document.addEventListener('click', function (e) {
-            if (!langSelector.contains(e.target)) {
+            // Schließen Sie das Dropdown nur, wenn weder auf den Selektor noch auf eine Option geklickt wurde
+            if (!langSelector.contains(e.target) && !langDropdown.contains(e.target)) {
                 langDropdown.style.display = 'none';
                 langSelector.setAttribute('aria-expanded', 'false');
             }
@@ -120,29 +124,38 @@ function initModals() {
     const loginModal = document.getElementById('loginModal');
     const registerModal = document.getElementById('registerModal');
 
+    // Hilfsfunktion zum Öffnen eines Modals
+    function openModal(modal) {
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // Hilfsfunktion zum Schließen aller Modals
+    function closeAllModals() {
+        if (loginModal) loginModal.style.display = 'none';
+        if (registerModal) registerModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
     if (loginBtn && loginModal) {
         loginBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            loginModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            openModal(loginModal);
         });
     }
 
     if (registerBtn && registerModal) {
         registerBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            registerModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            openModal(registerModal);
         });
     }
 
     if (closeModals) {
         closeModals.forEach(function (closeBtn) {
-            closeBtn.addEventListener('click', function () {
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'none';
-                document.body.style.overflow = '';
-            });
+            closeBtn.addEventListener('click', closeAllModals);
         });
     }
 
@@ -150,7 +163,7 @@ function initModals() {
         showRegister.addEventListener('click', function (e) {
             e.preventDefault();
             loginModal.style.display = 'none';
-            registerModal.style.display = 'flex';
+            openModal(registerModal);
         });
     }
 
@@ -158,19 +171,14 @@ function initModals() {
         showLogin.addEventListener('click', function (e) {
             e.preventDefault();
             registerModal.style.display = 'none';
-            loginModal.style.display = 'flex';
+            openModal(loginModal);
         });
     }
 
     // Close modals when clicking outside the content
     window.addEventListener('click', function (e) {
-        if (e.target === loginModal) {
-            loginModal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-        if (e.target === registerModal) {
-            registerModal.style.display = 'none';
-            document.body.style.overflow = '';
+        if (e.target === loginModal || e.target === registerModal) {
+            closeAllModals();
         }
     });
 }
@@ -365,64 +373,62 @@ function initCookieBanner() {
     const saveSettingsButton = document.getElementById('save-cookie-settings');
     const detailsToggle = document.getElementById('cookie-details-toggle');
     const detailsContent = document.getElementById('cookie-details');
+    const analyticsCheckbox = document.getElementById('analytics');
+    const marketingCheckbox = document.getElementById('marketing');
 
-    if (cookieBanner) {
-        // Check if user has already set cookie preferences
-        if (localStorage.getItem('cookiesAccepted')) {
-            cookieBanner.style.display = 'none';
-        }
+    if (!cookieBanner) return;
 
-        // Toggle cookie details
-        if (detailsToggle && detailsContent) {
-            detailsToggle.addEventListener('click', function () {
-                detailsContent.classList.toggle('active');
-                this.classList.toggle('active');
-                const expanded = this.getAttribute('aria-expanded') === 'true' || false;
-                this.setAttribute('aria-expanded', !expanded);
-                this.querySelector('.toggle-text').textContent = expanded ? 'Details anzeigen' : 'Details ausblenden';
-            });
-        }
+    // Prüfen, ob Cookies bereits akzeptiert wurden
+    if (localStorage.getItem('cookiesAccepted')) {
+        cookieBanner.style.display = 'none';
+        return;
+    }
 
-        // Accept all cookies
-        if (acceptAllButton) {
-            acceptAllButton.addEventListener('click', function () {
-                document.getElementById('analytics').checked = true;
-                document.getElementById('marketing').checked = true;
-                saveCookiePreferences();
-                cookieBanner.style.display = 'none';
-                showToast('Alle Cookies wurden akzeptiert', 'success');
-            });
-        }
+    // Details ein-/ausblenden
+    if (detailsToggle && detailsContent) {
+        detailsToggle.addEventListener('click', function () {
+            detailsContent.classList.toggle('active');
+            this.classList.toggle('active');
+            const expanded = this.getAttribute('aria-expanded') === 'true' || false;
+            this.setAttribute('aria-expanded', !expanded);
+            this.querySelector('.toggle-text').textContent = expanded ? 'Details anzeigen' : 'Details ausblenden';
+        });
+    }
 
-        // Accept only necessary cookies
-        if (acceptNecessaryButton) {
-            acceptNecessaryButton.addEventListener('click', function () {
-                document.getElementById('analytics').checked = false;
-                document.getElementById('marketing').checked = false;
-                saveCookiePreferences();
-                cookieBanner.style.display = 'none';
-                showToast('Nur notwendige Cookies wurden akzeptiert', 'info');
-            });
-        }
+    // Hilfsfunktion zum Speichern der Cookie-Einstellungen
+    function saveCookiePreferences(analytics = false, marketing = false) {
+        localStorage.setItem('cookiesAccepted', 'true');
+        localStorage.setItem('analyticsCookies', analytics);
+        localStorage.setItem('marketingCookies', marketing);
+        cookieBanner.style.display = 'none';
+    }
 
-        // Save custom cookie settings
-        if (saveSettingsButton) {
-            saveSettingsButton.addEventListener('click', function () {
-                saveCookiePreferences();
-                cookieBanner.style.display = 'none';
-                showToast('Deine Cookie-Einstellungen wurden gespeichert', 'success');
-            });
-        }
+    // Alle Cookies akzeptieren
+    if (acceptAllButton) {
+        acceptAllButton.addEventListener('click', function () {
+            if (analyticsCheckbox) analyticsCheckbox.checked = true;
+            if (marketingCheckbox) marketingCheckbox.checked = true;
+            saveCookiePreferences(true, true);
+            showToast('Alle Cookies wurden akzeptiert', 'success');
+        });
+    }
 
-        function saveCookiePreferences() {
-            const analyticsAccepted = document.getElementById('analytics').checked;
-            const marketingAccepted = document.getElementById('marketing').checked;
+    // Nur notwendige Cookies akzeptieren
+    if (acceptNecessaryButton) {
+        acceptNecessaryButton.addEventListener('click', function () {
+            if (analyticsCheckbox) analyticsCheckbox.checked = false;
+            if (marketingCheckbox) marketingCheckbox.checked = false;
+            saveCookiePreferences(false, false);
+            showToast('Nur notwendige Cookies wurden akzeptiert', 'info');
+        });
+    }
 
-            // Save preferences to localStorage
-            localStorage.setItem('cookiesAccepted', 'true');
-            localStorage.setItem('analyticsCookies', analyticsAccepted);
-            localStorage.setItem('marketingCookies', marketingAccepted);
-        }
+    // Benutzerdefinierte Cookie-Einstellungen speichern
+    if (saveSettingsButton && analyticsCheckbox && marketingCheckbox) {
+        saveSettingsButton.addEventListener('click', function () {
+            saveCookiePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+            showToast('Deine Cookie-Einstellungen wurden gespeichert', 'success');
+        });
     }
 }
 
@@ -502,6 +508,8 @@ function initAnimations() {
 
     // Stats counter animation
     function animateValue(element, start, end, duration) {
+        if (!element) return;
+
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
@@ -516,6 +524,8 @@ function initAnimations() {
 
     // Function to check if element is in viewport
     function isElementInViewport(el) {
+        if (!el) return false;
+
         const rect = el.getBoundingClientRect();
         return (
             rect.top >= 0 &&
@@ -525,16 +535,24 @@ function initAnimations() {
         );
     }
 
-    // Animate stats when they come into view
+    // Statistiken animieren, wenn sie in den Viewport gelangen
     const statsSection = document.querySelector('.stats-section');
+    const statsItems = [
+        {id: 'manager-count', endValue: 12487},
+        {id: 'leagues-count', endValue: 248},
+        {id: 'online-count', endValue: 1872},
+        {id: 'season-count', endValue: 37}
+    ];
     let statsAnimated = false;
 
     function checkStats() {
         if (!statsAnimated && statsSection && isElementInViewport(statsSection)) {
-            animateValue(document.getElementById('manager-count'), 0, 12487, 2000);
-            animateValue(document.getElementById('leagues-count'), 0, 248, 2000);
-            animateValue(document.getElementById('online-count'), 0, 1872, 2000);
-            animateValue(document.getElementById('season-count'), 0, 37, 2000);
+            statsItems.forEach(item => {
+                const element = document.getElementById(item.id);
+                if (element) {
+                    animateValue(element, 0, item.endValue, 2000);
+                }
+            });
             statsAnimated = true;
         }
     }
@@ -544,4 +562,88 @@ function initAnimations() {
 
     // Check on scroll
     window.addEventListener('scroll', checkStats);
+}
+
+// Formularvalidierung für Login- und Registrierungsformulare
+function initFormValidation() {
+    const loginForm = document.querySelector('.login-form');
+    const registerForm = document.querySelector('.register-form');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = this.querySelector('#username').value.trim();
+            const password = this.querySelector('#password').value.trim();
+
+            if (!username || !password) {
+                showToast('Bitte fülle alle Felder aus', 'error');
+                return;
+            }
+
+            // Hier würde normalerweise der Login-API-Aufruf erfolgen
+            // Für Demo-Zwecke zeigen wir nur eine Erfolgsmeldung an
+            showToast('Login erfolgreich!', 'success');
+
+            // Modal schließen
+            document.getElementById('loginModal').style.display = 'none';
+            document.body.style.overflow = '';
+        });
+    }
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = this.querySelector('#reg-username').value.trim();
+            const email = this.querySelector('#email').value.trim();
+            const password = this.querySelector('#reg-password').value.trim();
+            const confirmPassword = this.querySelector('#confirm-password').value.trim();
+            const termsAccepted = this.querySelector('#terms').checked;
+
+            if (!username || !email || !password || !confirmPassword) {
+                showToast('Bitte fülle alle Felder aus', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showToast('Die Passwörter stimmen nicht überein', 'error');
+                return;
+            }
+
+            if (!termsAccepted) {
+                showToast('Bitte akzeptiere die AGB und Datenschutzbestimmungen', 'error');
+                return;
+            }
+
+            // E-Mail-Format validieren
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Bitte gib eine gültige E-Mail-Adresse ein', 'error');
+                return;
+            }
+
+            // Hier würde normalerweise der Registrierungs-API-Aufruf erfolgen
+            // Für Demo-Zwecke zeigen wir nur eine Erfolgsmeldung an
+            showToast('Registrierung erfolgreich!', 'success');
+
+            // Modal schließen
+            document.getElementById('registerModal').style.display = 'none';
+            document.body.style.overflow = '';
+        });
+    }
+}
+
+// Bildladefehlern behandeln
+function initImageErrorHandling() {
+    const allImages = document.querySelectorAll('img');
+
+    allImages.forEach(img => {
+        img.addEventListener('error', function () {
+            // Fallback-Bild für fehlerhafte Bilder
+            this.src = 'img/placeholder.png';
+            this.alt = 'Bild konnte nicht geladen werden';
+
+            // Debugging-Information
+            console.warn(`Bild konnte nicht geladen werden: ${this.getAttribute('src')}`);
+        });
+    });
 }

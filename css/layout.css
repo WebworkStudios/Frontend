@@ -371,6 +371,7 @@ footer {
 @media (min-width: 768px) {
     header {
         justify-content: space-between; /* Stellt sicher, dass die Elemente korrekt verteilt sind */
+        padding: 1rem 1.5rem;
     }
 
     .elegant-container {
@@ -399,8 +400,11 @@ footer {
         padding: 0;
         overflow: visible;
         right: 0;
+        display: flex;
+        align-items: center;
         justify-content: flex-end;
-        margin-left: auto; /* Diese Zeile hinzufügen, um nav nach rechts zu schieben */
+        margin-left: auto;
+        gap: 1.5rem;
     }
 
     nav a {
@@ -430,15 +434,18 @@ footer {
         width: 100%;
     }
 
-    /* Korrekte Reihenfolge der Elemente sicherstellen */
+    /* Flexbox für die Nav-Elemente */
+    .lang-switch, .auth-buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Unnötige order-Eigenschaften entfernen */
     .lang-switch {
-        order: 1;
         margin-right: 20px;
     }
 
     .auth-buttons {
-        order: 2;
-        margin-left: 0;
         gap: 15px;
     }
 
