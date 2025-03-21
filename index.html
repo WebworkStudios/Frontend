@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allgemeine Geschäftsbedingungen - Kickerscup</title>
+    <title>Kickerscup</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/utilities.css">
-    <link rel="stylesheet" href="css/agb.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
@@ -73,194 +72,485 @@
     </nav>
 </header>
 
+<!-- Login Modal - Neue Version -->
+<div id="loginModal" class="modal" aria-labelledby="loginModalTitle" role="dialog" aria-hidden="true">
+    <div class="modal-content split-modal">
+        <span class="close-modal" aria-label="Schließen">&times;</span>
+
+        <!-- Image Side -->
+        <div class="modal-image">
+            <div class="overlay"></div>
+            <div class="modal-text-overlay">
+                <h2>Willkommen zurück!</h2>
+                <p>Logge dich ein und führe deinen Spieler zum Sieg.</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="modal-form">
+            <div class="logo-container">
+                <img src="img/player.png" alt="Kickerscup Logo" class="auth-logo">
+            </div>
+            <h2 id="loginModalTitle">Login</h2>
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="username">Benutzername</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="username" name="username" required placeholder="Dein Benutzername">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Passwort</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="password" name="password" required placeholder="Dein Passwort">
+                        <button type="button" class="toggle-password" aria-label="Passwort anzeigen">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group form-checkbox">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Angemeldet bleiben</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Einloggen</button>
+
+                <div class="social-login">
+                    <p>Oder einloggen mit</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="button" class="social-btn discord">
+                            <i class="fab fa-discord"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-links">
+                    <a href="#">Passwort vergessen?</a>
+                    <a href="#" class="show-register">Noch kein Konto? Registrieren</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Register Modal - Neue Version -->
+<div id="registerModal" class="modal" aria-labelledby="registerModalTitle" role="dialog" aria-hidden="true">
+    <div class="modal-content split-modal">
+        <span class="close-modal" aria-label="Schließen">&times;</span>
+
+        <!-- Form Side -->
+        <div class="modal-form">
+            <div class="logo-container">
+                <img src="img/player.png" alt="Kickerscup Logo" class="auth-logo">
+            </div>
+            <h2 id="registerModalTitle">Registrieren</h2>
+            <form class="register-form">
+                <div class="form-group">
+                    <label for="reg-username">Benutzername</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="reg-username" name="username" required
+                               placeholder="Wähle einen Benutzernamen">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-Mail</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <input type="email" id="email" name="email" required placeholder="Deine E-Mail-Adresse">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Passwort</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="reg-password" name="password" required
+                               placeholder="Erstelle ein sicheres Passwort">
+                        <button type="button" class="toggle-password" aria-label="Passwort anzeigen">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-progress"></div>
+                        </div>
+                        <span class="strength-text">Passwort-Stärke: Zu schwach</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Passwort bestätigen</label>
+                    <div class="input-with-icon">
+                        <div class="icon-container">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="confirm-password" name="confirm-password" required
+                               placeholder="Passwort wiederholen">
+                    </div>
+                </div>
+                <div class="form-group form-checkbox">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">Ich akzeptiere die <a href="agb.html">AGBs</a> und <a href="datenschutz.html">Datenschutzbestimmungen</a></label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Konto erstellen</button>
+                <div class="form-links">
+                    <a href="#" class="show-login">Bereits registriert? Login</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Image Side -->
+        <div class="modal-image">
+            <div class="overlay"></div>
+            <div class="modal-text-overlay">
+                <h2>Werde Teil der Community!</h2>
+                <p>Erstelle dein Konto und starte deine Karriere als Fußballstar.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Main Content -->
 <main>
-    <section class="AgbSection elegant-section">
+    <!-- Hero Section -->
+    <section class="hero-section">
         <div class="elegant-container">
-            <div class="elegant-heading animate-fadeUp">
-                <h1>Allgemeine Geschäftsbedingungen</h1>
-                <div class="elegant-divider"></div>
-                <p>Gültig ab: 21.03.2025</p>
+            <!-- Player Icon -->
+            <!-- Player Icon -->
+            <div class="player-icon animate-fadeUp" aria-hidden="true">
+                <img src="img/player.png" alt="Player Icon">
             </div>
 
-            <div class="AgbContainer">
-                <!-- Inhaltsverzeichnis -->
-                <div class="AgbToc animate-fadeUp">
-                    <div class="AgbTocHeader">
-                        <i class="fas fa-list"></i>
-                        <h3>Inhaltsverzeichnis</h3>
+            <!-- Main Heading -->
+            <h1 class="animate-fadeUp delay-1">VOM UNDERDOG ZUR LEGENDE</h1>
+
+            <!-- Description -->
+            <p class="description animate-fadeUp delay-2">
+                Übernimm das Ruder deines eigenen Fußballclubs! Stelle dein Team auf, entwickle deine Taktik und kämpfe
+                um Titel in der Welt des virtuellen Fußballs. Dein Klub, deine Regeln, dein Erfolg!
+            </p>
+
+            <!-- Call to Action Buttons -->
+            <div class="cta-buttons animate-fadeUp delay-3">
+                <button class="btn btn-primary pulse btn-large show-register-cta">
+                    Jetzt kostenlos mitspielen
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="countdown-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Neue Saison startet in</h2>
+                <div class="elegant-divider"></div>
+                <p>Sei bereit für den Anpfiff der nächsten Saison. Stelle dein Team zusammen und kämpfe um den
+                    Titel.</p>
+            </div>
+
+            <div class="countdown-container animate-fadeUp delay-1">
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-days">00</div>
+                        <div class="countdown-label">Tage</div>
                     </div>
-                    <div class="AgbTocContent">
-                        <ol class="AgbTocList">
-                            <li><a href="#agb-1">Allgemeine Bestimmungen</a></li>
-                            <li><a href="#agb-2">Vertragsgegenstand und Leistungsbeschreibung</a></li>
-                            <li><a href="#agb-3">Registrierung und Nutzerkonto</a></li>
-                            <li><a href="#agb-4">Rechte und Pflichten des Nutzers</a></li>
-                            <li><a href="#agb-5">Premium-Features und Zahlungsbedingungen</a></li>
-                            <li><a href="#agb-6">Laufzeit und Kündigung</a></li>
-                            <li><a href="#agb-7">Datenschutz</a></li>
-                            <li><a href="#agb-8">Gewährleistung und Haftung</a></li>
-                            <li><a href="#agb-9">Urheberrechte und geistiges Eigentum</a></li>
-                            <li><a href="#agb-10">Schlussbestimmungen</a></li>
-                        </ol>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-hours">00</div>
+                        <div class="countdown-label">Stunden</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-minutes">00</div>
+                        <div class="countdown-label">Minuten</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="countdown-seconds">00</div>
+                        <div class="countdown-label">Sekunden</div>
                     </div>
                 </div>
-
-                <!-- AGB Artikel -->
-                <div class="AgbArticles">
-                    <article id="agb-1" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">1</div>
-                            <h3>Allgemeine Bestimmungen</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>1.1</strong> Die Kickerscup GmbH, Musterstraße 123, 10115 Berlin (nachfolgend "Anbieter" genannt) betreibt unter der Domain "kickerscup.de" einen Online-Fußballmanager (nachfolgend "Plattform" genannt).</p>
-                            <p><strong>1.2</strong> Diese Allgemeinen Geschäftsbedingungen (nachfolgend "AGB") regeln die vertraglichen Beziehungen zwischen dem Anbieter und den Nutzern der Plattform.</p>
-                            <p><strong>1.3</strong> Der Anbieter stellt die Plattform ausschließlich auf Grundlage dieser AGB zur Verfügung. Entgegenstehende oder abweichende Bedingungen des Nutzers finden keine Anwendung.</p>
-                            <p><strong>1.4</strong> Der Anbieter behält sich das Recht vor, diese AGB mit Wirkung für die Zukunft zu ändern. Über Änderungen wird der Nutzer rechtzeitig, mindestens jedoch 30 Tage vor Inkrafttreten, per E-Mail informiert. Widerspricht der Nutzer der Geltung der geänderten AGB nicht innerhalb von 14 Tagen nach Erhalt der Änderungsmitteilung, gelten die neuen AGB als akzeptiert.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-2" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">2</div>
-                            <h3>Vertragsgegenstand und Leistungsbeschreibung</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>2.1</strong> Gegenstand dieses Vertrages ist die Nutzung der vom Anbieter zur Verfügung gestellten Plattform "Kickerscup", ein browser-basiertes Online-Fußballmanagerspiel.</p>
-                            <p><strong>2.2</strong> Die Plattform ermöglicht dem Nutzer die Verwaltung eines virtuellen Fußballvereins, einschließlich Teamaufstellung, Taktikentwicklung und Teilnahme an Wettbewerben in Form von simulierten Spielen gegen andere Nutzer.</p>
-                            <p><strong>2.3</strong> Die kostenlose Basisversion der Plattform ist in ihrem vollen Funktionsumfang nutzbar. Der Anbieter bietet zudem kostenpflichtige Premium-Features an, die in Ziffer 5 näher beschrieben werden.</p>
-                            <p><strong>2.4</strong> Der Anbieter ist bestrebt, einen durchgehenden, unterbrechungsfreien Zugang zur Plattform zu gewährleisten, übernimmt jedoch keine Garantie für die ständige Verfügbarkeit. Insbesondere können technische Störungen, Wartungsarbeiten oder Updates zu vorübergehenden Einschränkungen oder Unterbrechungen führen.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-3" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">3</div>
-                            <h3>Registrierung und Nutzerkonto</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>3.1</strong> Die Nutzung der Plattform setzt eine Registrierung voraus. Der Nutzer ist verpflichtet, bei der Registrierung wahrheitsgemäße Angaben zu machen und diese bei Änderungen unverzüglich zu aktualisieren.</p>
-                            <p><strong>3.2</strong> Die Registrierung ist nur volljährigen natürlichen Personen oder unter Zustimmung der Erziehungsberechtigten gestattet. Mit der Registrierung bestätigt der Nutzer, dass er mindestens 16 Jahre alt ist.</p>
-                            <p><strong>3.3</strong> Pro Person ist nur ein Nutzerkonto zulässig. Die Weitergabe der Zugangsdaten an Dritte ist untersagt.</p>
-                            <p><strong>3.4</strong> Der Nutzer ist für die sichere Verwahrung seiner Zugangsdaten verantwortlich. Bei Verdacht auf unbefugte Nutzung ist er verpflichtet, den Anbieter unverzüglich zu informieren.</p>
-                            <p><strong>3.5</strong> Der Anbieter behält sich das Recht vor, Nutzerkonten ohne Angabe von Gründen zu sperren oder zu löschen, insbesondere bei Verstößen gegen diese AGB oder bei Inaktivität von mehr als 12 Monaten.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-4" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">4</div>
-                            <h3>Rechte und Pflichten des Nutzers</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>4.1</strong> Der Nutzer verpflichtet sich, bei der Nutzung der Plattform geltendes Recht zu beachten und die Rechte Dritter zu respektieren.</p>
-                            <p><strong>4.2</strong> Untersagt sind insbesondere:</p>
-                            <ul class="AgbList">
-                                <li>Die Verwendung anstößiger, beleidigender, diskriminierender oder sonst rechtswidriger Inhalte oder Vereins-, Team- und Spielernamen</li>
-                                <li>Die Belästigung anderer Nutzer, insbesondere durch Spamming oder persönliche Angriffe</li>
-                                <li>Die Verwendung von Programmen oder Skripten, die den Spielablauf automatisieren oder manipulieren (Bots, Makros etc.)</li>
-                                <li>Die Ausnutzung von Programmierfehlern (Bugs) zu eigenen Zwecken</li>
-                                <li>Jede Handlung, die den technischen Betrieb der Plattform beeinträchtigen könnte</li>
-                            </ul>
-                            <p><strong>4.3</strong> Der Nutzer ist verantwortlich für die Sicherung seiner Spielstände und Daten. Der Anbieter übernimmt keine Haftung für verlorene Daten.</p>
-                            <p><strong>4.4</strong> Bei Verstößen gegen diese Nutzungsbedingungen behält sich der Anbieter das Recht vor, angemessene Maßnahmen zu ergreifen, einschließlich Verwarnung, temporärer Sperrung oder dauerhaftem Ausschluss von der Plattform.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-5" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">5</div>
-                            <h3>Premium-Features und Zahlungsbedingungen</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>5.1</strong> Der Anbieter bietet kostenpflichtige Premium-Features an, die das Spielerlebnis erweitern. Die Preise und Leistungsumfänge sind auf der Plattform ausgewiesen.</p>
-                            <p><strong>5.2</strong> Der Erwerb von Premium-Features erfolgt durch Abschluss eines gesonderten Vertrages. Die Zahlungsabwicklung erfolgt über die angebotenen Zahlungsmethoden.</p>
-                            <p><strong>5.3</strong> Bei minderjährigen Nutzern ist der Erwerb von Premium-Features nur mit ausdrücklicher Zustimmung der Erziehungsberechtigten gestattet.</p>
-                            <p><strong>5.4</strong> Zahlungen sind im Voraus zu leisten. Die erworbenen Premium-Features stehen nach Zahlungseingang sofort zur Verfügung.</p>
-                            <p><strong>5.5</strong> Ein Anspruch auf Rückerstattung besteht nicht, insbesondere nicht bei Nichtnutzung, Sperrung des Nutzerkontos aufgrund von Verstößen gegen diese AGB oder freiwilliger Kündigung.</p>
-                            <p><strong>5.6</strong> Preisänderungen werden rechtzeitig angekündigt und gelten nur für zukünftige Verträge. Bereits erworbene Premium-Features bleiben von Preisänderungen unberührt.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-6" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">6</div>
-                            <h3>Laufzeit und Kündigung</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>6.1</strong> Die Nutzung der kostenlosen Basisversion ist auf unbestimmte Zeit möglich und kann jederzeit ohne Einhaltung einer Frist gekündigt werden.</p>
-                            <p><strong>6.2</strong> Premium-Features werden für den jeweils angegebenen Zeitraum erworben und verlängern sich nicht automatisch.</p>
-                            <p><strong>6.3</strong> Die Kündigung des Nutzerkontos kann durch den Nutzer jederzeit über die Kontoeinstellungen erfolgen. Mit der Kündigung wird das Nutzerkonto deaktiviert und nach einer Frist von 30 Tagen endgültig gelöscht.</p>
-                            <p><strong>6.4</strong> Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt. Ein wichtiger Grund liegt insbesondere vor bei schwerwiegenden oder wiederholten Verstößen gegen diese AGB.</p>
-                            <p><strong>6.5</strong> Im Falle einer Kündigung durch den Anbieter aufgrund von Verstößen gegen diese AGB besteht kein Anspruch auf Rückerstattung bereits geleisteter Zahlungen.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-7" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">7</div>
-                            <h3>Datenschutz</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>7.1</strong> Der Anbieter erhebt, verarbeitet und nutzt personenbezogene Daten des Nutzers ausschließlich im Einklang mit den geltenden datenschutzrechtlichen Bestimmungen, insbesondere der Datenschutz-Grundverordnung (DSGVO).</p>
-                            <p><strong>7.2</strong> Einzelheiten zur Erhebung, Verarbeitung und Nutzung personenbezogener Daten sind in der <a href="datenschutz.html">Datenschutzerklärung</a> geregelt, die integraler Bestandteil dieser AGB ist.</p>
-                            <p><strong>7.3</strong> Der Nutzer hat jederzeit das Recht, unentgeltlich Auskunft über die zu seiner Person gespeicherten Daten zu erhalten, diese berichtigen, sperren oder löschen zu lassen, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-8" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">8</div>
-                            <h3>Gewährleistung und Haftung</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>8.1</strong> Der Anbieter bemüht sich um einen störungsfreien Betrieb der Plattform, übernimmt jedoch keine Gewähr für die ständige Verfügbarkeit.</p>
-                            <p><strong>8.2</strong> Der Anbieter haftet unbeschränkt für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, die auf einer vorsätzlichen oder fahrlässigen Pflichtverletzung des Anbieters, seiner gesetzlichen Vertreter oder Erfüllungsgehilfen beruhen.</p>
-                            <p><strong>8.3</strong> Für sonstige Schäden haftet der Anbieter nur, wenn sie auf einer vorsätzlichen oder grob fahrlässigen Pflichtverletzung des Anbieters, seiner gesetzlichen Vertreter oder Erfüllungsgehilfen beruhen.</p>
-                            <p><strong>8.4</strong> Die Haftung für leichte Fahrlässigkeit ist ausgeschlossen, außer bei der Verletzung vertragswesentlicher Pflichten (Kardinalpflichten). In diesem Fall ist die Haftung auf den vorhersehbaren, vertragstypischen Schaden begrenzt.</p>
-                            <p><strong>8.5</strong> Der Anbieter haftet nicht für Schäden, die durch höhere Gewalt, Aufruhr, Kriegs- und Naturereignisse oder durch sonstige nicht vom Anbieter zu vertretende Vorkommnisse eintreten.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-9" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">9</div>
-                            <h3>Urheberrechte und geistiges Eigentum</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>9.1</strong> Sämtliche Inhalte der Plattform, insbesondere Texte, Grafiken, Logos, Icons, Bilder, Audio- und Videodateien sowie Programmcodes sind urheberrechtlich geschützt und Eigentum des Anbieters oder seiner Lizenzgeber.</p>
-                            <p><strong>9.2</strong> Dem Nutzer wird ein einfaches, nicht-ausschließliches, nicht-übertragbares und widerrufliches Recht eingeräumt, die Plattform im Rahmen dieser AGB zu nutzen.</p>
-                            <p><strong>9.3</strong> Jede über die bestimmungsgemäße Nutzung hinausgehende Verwendung, insbesondere die Vervielfältigung, Verbreitung, öffentliche Zugänglichmachung oder Bearbeitung der Inhalte, bedarf der vorherigen schriftlichen Zustimmung des Anbieters.</p>
-                            <p><strong>9.4</strong> Mit dem Hochladen eigener Inhalte (z.B. Profilbilder) räumt der Nutzer dem Anbieter ein einfaches, zeitlich und räumlich unbeschränktes Nutzungsrecht an diesen Inhalten ein, soweit dies für den Betrieb der Plattform erforderlich ist.</p>
-                        </div>
-                    </article>
-
-                    <article id="agb-10" class="AgbArticle animate-fadeUp">
-                        <div class="AgbArticleHeader">
-                            <div class="AgbArticleNumber">10</div>
-                            <h3>Schlussbestimmungen</h3>
-                        </div>
-                        <div class="AgbArticleContent">
-                            <p><strong>10.1</strong> Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.</p>
-                            <p><strong>10.2</strong> Ist der Nutzer Kaufmann, juristische Person des öffentlichen Rechts oder öffentlich-rechtliches Sondervermögen, ist ausschließlicher Gerichtsstand für alle Streitigkeiten aus diesem Vertrag der Geschäftssitz des Anbieters.</p>
-                            <p><strong>10.3</strong> Sollten einzelne Bestimmungen dieser AGB ganz oder teilweise unwirksam oder undurchführbar sein oder werden, so wird dadurch die Wirksamkeit der übrigen Bestimmungen nicht berührt. An die Stelle der unwirksamen oder undurchführbaren Bestimmung tritt eine Regelung, die dem wirtschaftlichen Zweck der unwirksamen oder undurchführbaren Bestimmung am nächsten kommt.</p>
-                            <p><strong>10.4</strong> Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit, die unter <a href="https://ec.europa.eu/consumers/odr/" target="_blank">https://ec.europa.eu/consumers/odr/</a> abrufbar ist. Wir sind zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle weder verpflichtet noch bereit.</p>
-                            <p><strong>10.5</strong> Bei Fragen oder Beschwerden kontaktieren Sie uns bitte unter: <a href="mailto:support@kickerscup.de">support@kickerscup.de</a></p>
-                        </div>
-                    </article>
+                <div class="next-season-info" id="next-season-date">Nächste Saison beginnt am 01. April 2025 um 18:15
+                    Uhr
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Download Button -->
-                <div class="AgbDownload animate-fadeUp">
-                    <button class="btn btn-primary" id="agbDownloadButton" onclick="downloadAgbAsPdf()">
-                        <i class="fas fa-download mr-2"></i> AGB als PDF herunterladen
-                    </button>
+    <!-- Features Section -->
+    <section class="features-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Entdecke unsere Features</h2>
+                <div class="elegant-divider"></div>
+                <p>Erlebe ein umfassendes Fußball-Management-Erlebnis mit erstklassigen Features, die deine virtuelle
+                    Karriere vorantreiben.</p>
+            </div>
+
+            <div class="features-container">
+                <article class="feature-item animate-fadeUp">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Karrieresystem">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Karrieresystem</h3>
+                        <p>Beginne als junges Talent und arbeite dich durch verschiedene Ligen und Vereine. Entwickle
+                            deine Fähigkeiten, verdiene Auszeichnungen und werde zur Fußballlegende.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-1">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Live-Matches">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Live-Matches</h3>
+                        <p>Erlebe packende Echtzeit-Matches gegen andere Spieler. Triff taktische Entscheidungen, führe
+                            deinen Spieler über das Feld und erziele spektakuläre Tore.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-2">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Trainingsystem">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Trainingsystem</h3>
+                        <p>Entwickle deinen Spieler mit individuellen Trainingsplänen. Verbessere Technik, Ausdauer,
+                            Stärke und taktisches Verständnis durch spezielle Übungen.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Transfermarkt">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Transfermarkt</h3>
+                        <p>Verhandle Verträge mit Vereinen, wechsle zu stärkeren Teams und erhöhe deinen Marktwert.
+                            Reagiere auf Angebote und finde den perfekten Verein für deine Karriere.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-1">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Community">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Community</h3>
+                        <p>Tritt Spieler-Allianzen bei, chatte mit anderen Fußballfans und nimm an Turnieren teil. Baue
+                            Freundschaften auf und entwickle gemeinsame Strategien.</p>
+                    </div>
+                </article>
+                <article class="feature-item animate-fadeUp delay-2">
+                    <div class="feature-image">
+                        <img src="img/screenshot.png" alt="Statistiken">
+                    </div>
+                    <div class="feature-content">
+                        <h3>Statistiken</h3>
+                        <p>Verfolge detaillierte Statistiken zu deiner Spielerkarriere. Analysiere deine Leistungen,
+                            erkenne Stärken und Schwächen und optimiere dein Spiel.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Aktuelle Statistiken</h2>
+                <div class="elegant-divider"></div>
+                <p>Entdecke die Vielfalt der Kickerscup-Community und werde Teil einer wachsenden Welt des virtuellen
+                    Fußballs.</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-item animate-fadeUp">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value" id="manager-count">12,487</div>
+                    <div class="stat-label">Manager</div>
+                </div>
+                <div class="stat-item animate-fadeUp delay-1">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value" id="leagues-count">248</div>
+                    <div class="stat-label">Ligen</div>
+                </div>
+                <div class="stat-item animate-fadeUp delay-2">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="online-count">1,872</div>
+                    <div class="stat-label">Aktuell Online</div>
+                </div>
+                <div class="stat-item animate-fadeUp delay-3">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-value" id="season-count">37</div>
+                    <div class="stat-label">Aktuelle Saison</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h2>Häufig gestellte Fragen</h2>
+                <div class="elegant-divider"></div>
+                <p>Finde Antworten auf die am häufigsten gestellten Fragen zu Kickerscup und starte perfekt vorbereitet
+                    in deine Karriere.</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item animate-fadeUp">
+                    <div class="faq-question">
+                        Wie starte ich mein Spiel bei Kickerscup?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Um bei Kickerscup zu starten, registriere dich kostenlos, erstelle deinen eigenen Spieler
+                            und folge dem Tutorial. Anschließend kannst du an Trainingsspielen teilnehmen, deine
+                            Fähigkeiten verbessern und in deiner ersten Liga antreten.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-1">
+                    <div class="faq-question">
+                        Ist Kickerscup wirklich kostenlos spielbar?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Ja, Kickerscup ist vollständig kostenlos spielbar. Alle Hauptfunktionen des Spiels können
+                            ohne Zahlung genutzt werden. Es gibt optionale Premium-Features, die das Spielerlebnis
+                            erweitern können, aber diese sind nicht notwendig, um Erfolg zu haben.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-2">
+                    <div class="faq-question">
+                        Wie funktionieren die Transfers zwischen den Vereinen?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Transfers bei Kickerscup werden wie im echten Fußball gehandhabt. Vereine können Angebote
+                            für dich abgeben, die du annehmen oder ablehnen kannst. Alternativ kannst du dich selbst bei
+                            Vereinen bewerben. Dein Marktwert steigt mit deinen Leistungen und deiner Erfahrung.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-3">
+                    <div class="faq-question">
+                        Wie lange dauert eine Saison im Spiel?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Eine Saison bei Kickerscup dauert genau 30 Tage. Am 1. jedes Monats beginnt eine neue
+                            Saison. In dieser Zeit spielst du Liga- und Pokalspiele, nimmst an Turnieren teil und
+                            entwickelst deinen Spieler weiter.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item animate-fadeUp delay-4">
+                    <div class="faq-question">
+                        Kann ich mit Freunden zusammen in einem Team spielen?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Ja, Kickerscup ermöglicht es dir, mit Freunden im selben Verein zu spielen. Ihr könnt auch
+                            eigene Teams gründen und gemeinsam aufsteigen. Nutze die Freundschaftsfunktion und
+                            Teameinladungen, um mit Freunden zusammenzuspielen.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </main>
+
+<!-- Cookie-Banner -->
+<div id="cookie-banner" class="cookie-banner" role="alert" aria-labelledby="cookie-title">
+    <div class="cookie-content">
+        <div class="cookie-header">
+            <h3 id="cookie-title">Cookie-Einstellungen</h3>
+            <button id="cookie-details-toggle" class="cookie-details-toggle" aria-expanded="false"
+                    aria-controls="cookie-details">
+                <span class="toggle-text">Details anzeigen</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+
+        <p>Wir verwenden Cookies, um Dir die bestmögliche Erfahrung auf unserer Website zu bieten. Mehr Informationen
+            findest Du in unserer <a href="#">Datenschutzerklärung</a>.</p>
+
+        <div id="cookie-details" class="cookie-details">
+            <div class="cookie-option">
+                <div>
+                    <h4>Notwendige Cookies</h4>
+                    <p>Diese Cookies sind für das Funktionieren der Website erforderlich und können nicht deaktiviert
+                        werden.</p>
+                </div>
+                <div class="cookie-switch disabled">
+                    <input type="checkbox" id="necessary" checked disabled>
+                    <label for="necessary"></label>
+                </div>
+            </div>
+
+            <div class="cookie-option">
+                <div>
+                    <h4>Analytische Cookies</h4>
+                    <p>Helfen uns zu verstehen, wie Besucher mit unserer Website interagieren.</p>
+                </div>
+                <div class="cookie-switch">
+                    <input type="checkbox" id="analytics">
+                    <label for="analytics"></label>
+                </div>
+            </div>
+
+            <div class="cookie-option">
+                <div>
+                    <h4>Marketing-Cookies</h4>
+                    <p>Werden verwendet, um Besuchern auf anderen Websites relevante Anzeigen zu zeigen.</p>
+                </div>
+                <div class="cookie-switch">
+                    <input type="checkbox" id="marketing">
+                    <label for="marketing"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="cookie-actions">
+            <button id="accept-all-cookies" class="btn btn-primary">Alle akzeptieren</button>
+            <button id="accept-necessary-cookies" class="btn cookie-btn-secondary">Nur notwendige</button>
+            <button id="save-cookie-settings" class="btn cookie-btn-secondary">Einstellungen speichern</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast-Container -->
+<div class="toast-container" id="toast-container"></div>
 
 <!-- Footer -->
 <footer>
@@ -292,12 +582,7 @@
     </div>
 </footer>
 
-<!-- jsPDF Bibliothek einbinden -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <!-- JavaScript einbinden -->
 <script src="js/main.js"></script>
-<script src="js/agb.js"></script>
 </body>
 </html>

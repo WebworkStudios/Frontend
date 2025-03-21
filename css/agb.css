@@ -1,4 +1,4 @@
-/* agb.css - Styling für die AGB-Seite */
+/* agb.css - Optimierte Version mit weniger Duplikationen */
 
 /* Hauptcontainer für AGB */
 .AgbSection {
@@ -14,13 +14,13 @@
     gap: 30px;
 }
 
-/* Inhaltsverzeichnis */
+/* Inhaltsverzeichnis - Nutzt wiederverwendbare Stile aus components.css */
 .AgbToc {
     background: var(--card-bg);
     border-radius: 15px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
     overflow: hidden;
     transition: transform 0.4s ease, box-shadow 0.3s ease;
     position: relative;
@@ -28,7 +28,7 @@
 
 .AgbToc:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--card-hover-shadow);
 }
 
 .AgbTocHeader {
@@ -37,7 +37,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: var(--card-border);
 }
 
 .AgbTocHeader i {
@@ -94,15 +94,15 @@
     background: var(--card-bg);
     border-radius: 15px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
     overflow: hidden;
     transition: transform 0.4s ease, box-shadow 0.3s ease;
     position: relative;
 }
 
 .AgbArticle:hover {
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--card-hover-shadow);
 }
 
 .AgbArticle::before {
@@ -126,7 +126,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: var(--card-border);
     background: rgba(0, 0, 0, 0.2);
 }
 
@@ -154,7 +154,7 @@
 .AgbArticleContent {
     padding: 20px;
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.6;
 }
 
@@ -213,18 +213,8 @@
     min-width: 250px;
 }
 
-/* Smooth scrolling für Anchor-Links */
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 100px;
-}
-
 /* Responsive Design */
 @media (min-width: 768px) {
-    .AgbContainer {
-        width: 90%;
-    }
-
     .AgbTocHeader {
         padding: 20px 25px;
     }
@@ -274,7 +264,6 @@ html {
     }
 
     .AgbArticleContent {
-        font-size: 14px;
         padding: 30px;
     }
 
