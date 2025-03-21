@@ -1,11 +1,17 @@
-// agb.js - JavaScript für die AGB-Seite
+// agb.js - JavaScript für die AGB-Seite (mit vereinheitlichter Logik)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere PDF-Download-Funktion
-    initPdfDownload();
+    // Initialisiere die AGB-Seite mit den gemeinsamen Funktionen aus legal-utils.js
+    if (window.legalUtils && typeof window.legalUtils.initLegalPage === 'function') {
+        window.legalUtils.initLegalPage('agb');
+    } else {
+        console.warn('legal-utils.js ist nicht geladen oder enthält nicht die erwarteten Funktionen');
+        // Fallback: Initialisiere die wichtigsten Funktionen direkt
+        initPdfDownload();
+    }
 });
 
-// Initialisierung der PDF-Download-Funktionalität
+// Legacy-Funktion für den Fall, dass legal-utils nicht verfügbar ist
 function initPdfDownload() {
     const downloadButton = document.getElementById('agbDownloadButton');
     
@@ -14,77 +20,21 @@ function initPdfDownload() {
     }
 }
 
-// Hilfsfunktion für Toast-Nachrichten, falls die globale nicht verfügbar ist
-function safeShowToast(message, type) {
-    try {
-        if (typeof showToast === 'function') {
-            showToast(message, type);
-        } else {
-            // Fallback-Implementierung für Toast-Nachrichten
-            const toastContainer = document.getElementById('toast-container');
-            
-            if (!toastContainer) {
-                // Erstelle einen Toast-Container, wenn keiner existiert
-                const container = document.createElement('div');
-                container.id = 'toast-container';
-                container.className = 'toast-container';
-                document.body.appendChild(container);
-            }
-            
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type || 'info'}`;
-            
-            let iconClass = '';
-            switch (type) {
-                case 'success':
-                    iconClass = 'fa-check-circle';
-                    break;
-                case 'error':
-                    iconClass = 'fa-exclamation-circle';
-                    break;
-                case 'warning':
-                    iconClass = 'fa-exclamation-triangle';
-                    break;
-                case 'info':
-                default:
-                    iconClass = 'fa-info-circle';
-                    break;
-            }
-            
-            toast.innerHTML = `
-                <div class="toast-icon">
-                    <i class="fas ${iconClass}"></i>
-                </div>
-                <div class="toast-message">${message}</div>
-                <button class="toast-close">&times;</button>
-            `;
-            
-            document.getElementById('toast-container').appendChild(toast);
-            
-            // Show toast
-            setTimeout(() => toast.classList.add('show'), 10);
-            
-            // Auto-hide toast after 5 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 5000);
-            
-            // Close button functionality
-            toast.querySelector('.toast-close').addEventListener('click', function () {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            });
-        }
-    } catch (e) {
-        console.warn('Failed to show toast:', e);
-    }
-}
-
 // Funktion zum Herunterladen der AGB als PDF im globalen Scope definieren
+// Diese Funktion wird nur als Fallback verwendet, wenn legal-utils nicht verfügbar ist
 window.downloadAgbAsPdf = function() {
+    if (window.legalUtils && typeof window.legalUtils.downloadLegalAsPdf === 'function') {
+        window.legalUtils.downloadLegalAsPdf('agb');
+        return;
+    }
+    
+    // Fallback-Implementierung (identisch zur alten Implementierung)
     // Anzeigen eines Lade-Toasts
-    safeShowToast('PDF wird erstellt. Bitte warten...', 'info');
+    if (typeof showToast === 'function') {
+        showToast('PDF wird erstellt. Bitte warten...', 'info');
+    } else {
+        console.log('PDF wird erstellt. Bitte warten...');
+    }
     
     // Verzögerung, um dem Toast Zeit zur Anzeige zu geben
     setTimeout(() => {
@@ -190,83 +140,15 @@ window.downloadAgbAsPdf = function() {
             doc.save('Kickerscup-AGB.pdf');
             
             // Erfolgsmeldung anzeigen
-            showToast('AGB wurden erfolgreich als PDF heruntergeladen!', 'success');
+            if (typeof showToast === 'function') {
+                showToast('AGB wurden erfolgreich als PDF heruntergeladen!', 'success');
+            }
             
         } catch (error) {
             console.error('Fehler beim Erstellen des PDFs:', error);
-            showToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
+            if (typeof showToast === 'function') {
+                showToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
+            }
         }
     }, 300);
-}
-
-// Alternative Implementierung mit html2canvas für komplexere Layouts
-function downloadAgbWithHtml2Canvas() {
-    showToast('PDF wird erstellt. Bitte warten...', 'info');
-    
-    const { jsPDF } = window.jspdf;
-    const articles = document.querySelectorAll('.AgbArticle');
-    const doc = new jsPDF('p', 'mm', 'a4');
-    
-    let promises = [];
-    
-    // Titel hinzufügen
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.text('Allgemeine Geschäftsbedingungen', 20, 20);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.text('Kickerscup GmbH - Gültig ab: 21.03.2025', 20, 30);
-    
-    let currentPage = 0;
-    let yOffset = 40;
-    
-    // Jeder Artikel wird als Bild gerendert
-    articles.forEach((article, index) => {
-        const promise = html2canvas(article, {
-            scale: 2,
-            useCORS: true,
-            logging: false
-        }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const imgProps = doc.getImageProperties(imgData);
-            const pdfWidth = doc.internal.pageSize.getWidth() - 40;
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-            
-            // Neue Seite, wenn nicht genug Platz ist
-            if (yOffset + pdfHeight > 280) {
-                doc.addPage();
-                currentPage++;
-                yOffset = 20;
-            }
-            
-            doc.addImage(imgData, 'PNG', 20, yOffset, pdfWidth, pdfHeight);
-            yOffset += pdfHeight + 10;
-            
-            return { index, complete: true };
-        });
-        
-        promises.push(promise);
-    });
-    
-    // Warten bis alle Artikel gerendert wurden
-    Promise.all(promises)
-        .then(() => {
-            // Footer auf jeder Seite
-            const pageCount = doc.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(9);
-                doc.setTextColor(150, 150, 150);
-                doc.text('Kickerscup GmbH • Musterstraße 123 • 10115 Berlin • Deutschland', 20, 285);
-                doc.text(`Seite ${i} von ${pageCount}`, 170, 285);
-            }
-            
-            doc.save('Kickerscup-AGB.pdf');
-            safeShowToast('AGB wurden erfolgreich als PDF heruntergeladen!', 'success');
-        })
-        .catch(error => {
-            console.error('Fehler beim Erstellen des PDFs:', error);
-            safeShowToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
-        });
 };

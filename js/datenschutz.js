@@ -1,20 +1,20 @@
-// datenschutz.js - JavaScript für die Datenschutzseite
+// datenschutz.js - JavaScript für die Datenschutzseite (mit vereinheitlichter Logik)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere PDF-Download-Funktion
-    initPdfDownload();
-    
-    // Initialisiere Datenschutz-Anfrage-Modal
-    initDatenschutzAnfrageModal();
-    
-    // Initialisiere Cookie-Einstellungen
-    initCookieSettings();
-    
-    // Google Analytics Opt-Out Link
-    initGoogleAnalyticsOptOut();
+    // Initialisiere die Datenschutz-Seite mit den gemeinsamen Funktionen aus legal-utils.js
+    if (window.legalUtils && typeof window.legalUtils.initLegalPage === 'function') {
+        window.legalUtils.initLegalPage('datenschutz');
+    } else {
+        console.warn('legal-utils.js ist nicht geladen oder enthält nicht die erwarteten Funktionen');
+        // Fallback: Initialisiere die wichtigsten Funktionen direkt
+        initPdfDownload();
+        initDatenschutzAnfrageModal();
+        initCookieSettings();
+        initGoogleAnalyticsOptOut();
+    }
 });
 
-// Initialisierung der PDF-Download-Funktionalität
+// Legacy-Funktionen für den Fall, dass legal-utils nicht verfügbar ist
 function initPdfDownload() {
     const downloadButton = document.getElementById('datenschutzDownloadButton');
     
@@ -25,65 +25,17 @@ function initPdfDownload() {
 
 // Hilfsfunktion für Toast-Nachrichten, falls die globale nicht verfügbar ist
 function safeShowToast(message, type) {
+    if (window.legalUtils && typeof window.legalUtils.safeShowToast === 'function') {
+        window.legalUtils.safeShowToast(message, type);
+        return;
+    }
+    
+    // Fallback-Implementierung
     try {
         if (typeof showToast === 'function') {
             showToast(message, type);
         } else {
-            // Fallback-Implementierung für Toast-Nachrichten
-            const toastContainer = document.getElementById('toast-container');
-            
-            if (!toastContainer) {
-                // Erstelle einen Toast-Container, wenn keiner existiert
-                const container = document.createElement('div');
-                container.id = 'toast-container';
-                container.className = 'toast-container';
-                document.body.appendChild(container);
-            }
-            
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type || 'info'}`;
-            
-            let iconClass = '';
-            switch (type) {
-                case 'success':
-                    iconClass = 'fa-check-circle';
-                    break;
-                case 'error':
-                    iconClass = 'fa-exclamation-circle';
-                    break;
-                case 'warning':
-                    iconClass = 'fa-exclamation-triangle';
-                    break;
-                case 'info':
-                default:
-                    iconClass = 'fa-info-circle';
-                    break;
-            }
-            
-            toast.innerHTML = `
-                <div class="toast-icon">
-                    <i class="fas ${iconClass}"></i>
-                </div>
-                <div class="toast-message">${message}</div>
-                <button class="toast-close">&times;</button>
-            `;
-            
-            document.getElementById('toast-container').appendChild(toast);
-            
-            // Show toast
-            setTimeout(() => toast.classList.add('show'), 10);
-            
-            // Auto-hide toast after 5 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 5000);
-            
-            // Close button functionality
-            toast.querySelector('.toast-close').addEventListener('click', function () {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            });
+            console.log(`${type}: ${message}`);
         }
     } catch (e) {
         console.warn('Failed to show toast:', e);
@@ -92,7 +44,12 @@ function safeShowToast(message, type) {
 
 // Funktion zum Herunterladen der Datenschutzerklärung als PDF
 function downloadDatenschutzAsPdf() {
-    // Anzeigen eines Lade-Toasts
+    if (window.legalUtils && typeof window.legalUtils.downloadLegalAsPdf === 'function') {
+        window.legalUtils.downloadLegalAsPdf('datenschutz');
+        return;
+    }
+    
+    // Fallback-Implementierung für den Fall, dass legal-utils nicht verfügbar ist
     safeShowToast('PDF wird erstellt. Bitte warten...', 'info');
     
     // Verzögerung, um dem Toast Zeit zur Anzeige zu geben
@@ -222,6 +179,11 @@ function downloadDatenschutzAsPdf() {
 
 // Initialisierung des Datenschutz-Anfrage-Modals
 function initDatenschutzAnfrageModal() {
+    if (window.legalUtils && typeof window.legalUtils.initDatenschutzAnfrageModal === 'function') {
+        return; // Die Funktion wird bereits von legal-utils aufgerufen
+    }
+    
+    // Fallback-Implementierung
     const modalTrigger = document.getElementById('datenschutzFormular');
     const modal = document.getElementById('datenschutzAnfrageModal');
     const closeModalBtn = modal ? modal.querySelector('.close-modal') : null;
@@ -271,6 +233,11 @@ function initDatenschutzAnfrageModal() {
 
 // Initialisierung der Cookie-Einstellungen
 function initCookieSettings() {
+    if (window.legalUtils && typeof window.legalUtils.initCookieSettings === 'function') {
+        return; // Die Funktion wird bereits von legal-utils aufgerufen
+    }
+    
+    // Fallback-Implementierung
     const cookieSettingsBtn = document.getElementById('openCookieSettings');
     
     if (cookieSettingsBtn) {
@@ -302,6 +269,11 @@ function initCookieSettings() {
 
 // Google Analytics Opt-Out Funktion
 function initGoogleAnalyticsOptOut() {
+    if (window.legalUtils && typeof window.legalUtils.initGoogleAnalyticsOptOut === 'function') {
+        return; // Die Funktion wird bereits von legal-utils aufgerufen
+    }
+    
+    // Fallback-Implementierung
     const gaOptOutLink = document.getElementById('ga-opt-out');
     
     if (gaOptOutLink) {
