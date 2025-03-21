@@ -14,7 +14,15 @@ document.addEventListener('DOMContentLoaded', function () {
     initFormValidation();
     initImageErrorHandling();
     initToastContainer();
+
+        // Prüfe, ob wir auf einer Legal-Seite sind
+    const legalContainer = document.querySelector('.legal-container');
+    if (legalContainer) {
+        initLegalCardTouchFeedback();
+    }
 });
+
+
 
 // Initialize CTA button
 function initCTAButton() {
@@ -685,4 +693,35 @@ function initImageErrorHandling() {
             console.warn(`Bild konnte nicht geladen werden: ${this.getAttribute('src')}`);
         });
     });
+}
+
+// Touch-Feedback für Legal Cards
+function initLegalCardTouchFeedback() {
+    const legalCards = document.querySelectorAll('.legal-card');
+    
+    if (legalCards.length) {
+        legalCards.forEach(card => {
+            card.addEventListener('touchstart', function(e) {
+                // Erstelle ein Ripple-Element
+                const ripple = document.createElement('span');
+                ripple.classList.add('touch-feedback');
+                
+                // Positioniere das Ripple an der Berührungsstelle
+                const rect = this.getBoundingClientRect();
+                const x = e.touches[0].clientX - rect.left;
+                const y = e.touches[0].clientY - rect.top;
+                
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                // Füge das Ripple zum Element hinzu
+                this.appendChild(ripple);
+                
+                // Entferne das Ripple nach der Animation
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    }
 }

@@ -1587,3 +1587,317 @@
     .toast-warning {
         border-left-width: 4px;
     }
+}
+
+  /* Legal Pages Styling (für Impressum, Datenschutz, AGB) */
+.legal-section {
+    padding: 40px 0;
+    position: relative;
+}
+
+.legal-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.legal-card {
+    background: rgba(26, 26, 26, 0.5);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.legal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    border-color: rgba(var(--primary-rgb), 0.2);
+}
+
+.legal-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary-gradient);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.legal-card:hover::after,
+.legal-card:active::after {
+    transform: scaleX(1);
+}
+
+.legal-card-header {
+    background: linear-gradient(135deg, rgba(255, 138, 0, 0.15) 0%, rgba(255, 138, 0, 0.05) 100%);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.legal-card-header i {
+    font-size: 20px;
+    color: var(--primary);
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.legal-card:hover .legal-card-header i,
+.legal-card:active .legal-card-header i {
+    transform: scale(1.2);
+    color: var(--primary-light);
+}
+
+.legal-card-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.legal-card-content {
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.legal-card-content p {
+    margin-bottom: 10px;
+}
+
+.legal-card-content p:last-child {
+    margin-bottom: 0;
+}
+
+.legal-card-content strong {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.legal-card-content a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.legal-card-content a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+.kleinunternehmer-hinweis {
+    background: rgba(var(--primary-rgb), 0.1);
+    border-left: 3px solid var(--primary);
+    padding: 10px 15px;
+    border-radius: 0 8px 8px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 15px !important;
+}
+
+.kleinunternehmer-hinweis i {
+    color: var(--primary);
+    margin-top: 3px;
+}
+
+/* Touch-Feedback-Animation */
+.touch-feedback {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(var(--primary-rgb), 0.3);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    animation: touch-ripple 0.6s ease-out;
+}
+
+@keyframes touch-ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(8);
+        opacity: 0;
+    }
+}
+
+/* Mobile-Optimierungen */
+/* Mobile-Optimierungen */
+@media (max-width: 767px) {
+    /* Angepasste Animation für mobile Geräte */
+    .legal-card.animate-fadeUp {
+        animation-duration: 0.6s;
+    }
+    
+    /* Optimierte Touch-Interaktion */
+    .legal-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        min-height: 44px;
+    }
+    
+    /* Anpassungen für legal-card-header in mobiler Ansicht */
+    .legal-card-header {
+        padding: 12px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .legal-card-header i {
+        font-size: 18px;
+    }
+    
+    .legal-card-header h3 {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    
+    /* Sanfterer Hover-Effekt für Touch-Geräte */
+    .legal-card:active {
+        transform: translateY(-3px) scale(0.99);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Kleinunternehmer-Hinweis für mobile Geräte optimieren */
+    .kleinunternehmer-hinweis {
+        padding: 8px 12px;
+        margin-top: 12px !important;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .kleinunternehmer-hinweis i {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+}
+/* Tablet-Ansicht */
+@media (min-width: 768px) {
+    .legal-section {
+        padding: 60px 0;
+    }
+    
+    .legal-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+    
+    .legal-card-header {
+        padding: 20px 25px;
+    }
+    
+    .legal-card-header i {
+        font-size: 24px;
+    }
+    
+    .legal-card-header h3 {
+        font-size: 20px;
+    }
+    
+    .legal-card-content {
+        padding: 25px;
+        font-size: 15px;
+    }
+    
+    .kleinunternehmer-hinweis {
+        padding: 12px 18px;
+    }
+}
+
+/* Desktop-Ansicht */
+@media (min-width: 1024px) {
+    .legal-section {
+        padding: 80px 0;
+    }
+    
+    .legal-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        max-width: 1200px;
+    }
+    
+    .legal-card-header {
+        padding: 22px 28px;
+    }
+    
+    .legal-card-header i {
+        font-size: 26px;
+    }
+    
+    .legal-card-header h3 {
+        font-size: 22px;
+    }
+    
+    .legal-card-content {
+        padding: 28px;
+        font-size: 16px;
+    }
+    
+    .kleinunternehmer-hinweis {
+        padding: 15px 20px;
+        margin-top: 20px !important;
+    }
+}
+
+/* Print-Optimierungen für rechtliche Seiten */
+@media print {
+    .legal-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .legal-card-header {
+        background: #f5f5f5 !important;
+        color: #333 !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+    
+    .legal-card-header i,
+    .legal-card-header h3 {
+        color: #333 !important;
+    }
+    
+    .legal-card-content {
+        color: #333 !important;
+    }
+    
+    .legal-card-content strong {
+        color: #000 !important;
+    }
+    
+    .legal-container {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .kleinunternehmer-hinweis {
+        border: 1px solid #ddd !important;
+        background: #f9f9f9 !important;
+    }
+    
+    .kleinunternehmer-hinweis i {
+        color: #333 !important;
+    }
+}
