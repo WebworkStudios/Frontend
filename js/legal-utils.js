@@ -1,51 +1,54 @@
-// legal-utils.js - Gemeinsame Funktionen für rechtliche Seiten (AGB, Datenschutz, Impressum)
+// legal-utils.js - Comprehensive utilities for legal pages (AGB, Datenschutz, Impressum)
 
 /**
- * Namespace für gemeinsame Funktionen der rechtlichen Seiten
+ * Namespace for shared legal page functions
  */
 window.legalUtils = (function() {
     /**
-     * Initialisiert gemeinsame Funktionen für rechtliche Seiten
-     * @param {string} pageType - Der Typ der Seite ('agb', 'datenschutz', 'impressum')
+     * Initializes common functions for legal pages
+     * @param {string} pageType - The type of page ('agb', 'datenschutz', 'impressum')
      */
     function initLegalPage(pageType) {
-        // Initialisiere PDF-Download-Funktion, falls verfügbar
+        console.log(`Initializing ${pageType} page utilities`);
+        
+        // Initialize PDF download function
         initPdfDownload(pageType);
         
-        // Initialisiere Scroll-Animation für die Inhaltsverzeichnislinks
-        initTocScrolling(pageType);
+        // Initialize scroll animation for table of contents links
+        initTocScrolling();
         
-        // Spezifische Initialisierungen je nach Seitentyp
+        // Page-specific initializations
         switch(pageType) {
             case 'datenschutz':
-                initDatenschutzAnfrageModal();
-                initCookieSettings();
-                initGoogleAnalyticsOptOut();
-                initVersionLinks();
+                initDatenschutzSpecifics();
                 break;
             case 'agb':
-                // AGB-spezifische Initialisierungen (falls vorhanden)
+                // AGB-specific initializations (if any)
                 break;
             case 'impressum':
-                // Impressum-spezifische Initialisierungen (falls vorhanden)
+                // Impressum-specific initializations (if any)
                 break;
         }
         
-        // Initialisiere Touch-Feedback für Rechtskarten auf mobilen Geräten
+        // Initialize touch feedback for legal cards on mobile devices
         initLegalCardTouchFeedback();
     }
 
     /**
-     * Initialisiert Scroll-Animation für Inhaltsverzeichnislinks
-     * @param {string} pageType - Der Typ der Seite ('agb', 'datenschutz', 'impressum')
+     * Initializes datenschutz-specific functionality
      */
-    function initTocScrolling(pageType) {
-        let tocSelector;
-        
-        // Universeller Selektor für legal.css
-        tocSelector = '.legal-toc-list a';
-        
-        const tocLinks = document.querySelectorAll(tocSelector);
+    function initDatenschutzSpecifics() {
+        initDatenschutzAnfrageModal();
+        initCookieSettings();
+        initGoogleAnalyticsOptOut();
+        initVersionLinks();
+    }
+
+    /**
+     * Initializes scroll animation for table of contents links
+     */
+    function initTocScrolling() {
+        const tocLinks = document.querySelectorAll('.legal-toc-list a');
         
         tocLinks.forEach(link => {
             link.addEventListener('click', function(e) {
@@ -55,29 +58,29 @@ window.legalUtils = (function() {
                 const targetElement = document.querySelector(targetId);
                 
                 if (targetElement) {
-                    // Scroll mit Animation zum Ziel
+                    // Smooth scroll to target with offset for header
                     window.scrollTo({
-                        top: targetElement.offsetTop - 80, // Offset für Header
+                        top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
                     
-                    // Füge kurzzeitig eine Hervorhebung hinzu
+                    // Briefly highlight the target element
                     targetElement.classList.add('highlight-section');
                     setTimeout(() => {
                         targetElement.classList.remove('highlight-section');
                     }, 2000);
                     
-                    // Setze Hash in der URL (für Direktlinks)
+                    // Update URL hash for direct links
                     history.pushState(null, null, targetId);
                 }
             });
         });
         
-        // Überprüfe, ob ein Hash in der URL ist und scrolle dorthin
+        // Check if URL has a hash and scroll to it
         if (window.location.hash) {
             const targetElement = document.querySelector(window.location.hash);
             if (targetElement) {
-                // Verzögerung, um sicherzustellen, dass die Seite vollständig geladen ist
+                // Delay to ensure page is fully loaded
                 setTimeout(() => {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
@@ -94,8 +97,8 @@ window.legalUtils = (function() {
     }
 
     /**
-     * Initialisiert die PDF-Download-Funktionalität
-     * @param {string} pageType - Der Typ der Seite ('agb', 'datenschutz')
+     * Initializes the PDF download functionality
+     * @param {string} pageType - The type of page ('agb', 'datenschutz', 'impressum')
      */
     function initPdfDownload(pageType) {
         let downloadButtonId;
@@ -105,15 +108,12 @@ window.legalUtils = (function() {
                 downloadButtonId = 'agbDownloadButton';
                 break;
             case 'datenschutz':
-                // Prüfe beide mögliche IDs für Datenschutz-Download-Button
-                if (document.getElementById('datenschutzDownloadButton')) {
-                    downloadButtonId = 'datenschutzDownloadButton';
-                } else if (document.getElementById('legalDownloadButton')) {
-                    downloadButtonId = 'legalDownloadButton';
-                }
+                // Check both possible IDs for datenschutz download button
+                downloadButtonId = document.getElementById('datenschutzDownloadButton') ? 
+                    'datenschutzDownloadButton' : 'legalDownloadButton';
                 break;
             default:
-                return; // Wenn kein PDF-Download erforderlich ist
+                return; // If no PDF download is required
         }
         
         const downloadButton = document.getElementById(downloadButtonId);
@@ -126,72 +126,75 @@ window.legalUtils = (function() {
     }
 
     /**
-     * Hilfsfunktion für Toast-Nachrichten, falls die globale nicht verfügbar ist
-     * @param {string} message - Die anzuzeigende Nachricht
-     * @param {string} type - Der Typ der Nachricht ('success', 'error', 'warning', 'info')
+     * Shows toast messages with fallback
+     * @param {string} message - The message to display
+     * @param {string} type - The type of message ('success', 'error', 'warning', 'info')
      */
-    function safeShowToast(message, type) {
+    function showToast(message, type = 'info') {
         try {
-            // Prüfen, ob die globale showToast-Funktion verfügbar ist
+            // Check if global showToast function is available
             if (typeof window.showToast === 'function') {
                 window.showToast(message, type);
-            } else {
-                // Fallback-Implementierung für Toast-Nachrichten
-                const toastContainer = document.getElementById('toast-container') || createToastContainer();
-                
-                const toast = document.createElement('div');
-                toast.className = `toast toast-${type || 'info'}`;
-                
-                let iconClass = '';
-                switch (type) {
-                    case 'success':
-                        iconClass = 'fa-check-circle';
-                        break;
-                    case 'error':
-                        iconClass = 'fa-exclamation-circle';
-                        break;
-                    case 'warning':
-                        iconClass = 'fa-exclamation-triangle';
-                        break;
-                    case 'info':
-                    default:
-                        iconClass = 'fa-info-circle';
-                        break;
-                }
-                
-                toast.innerHTML = `
-                    <div class="toast-icon">
-                        <i class="fas ${iconClass}"></i>
-                    </div>
-                    <div class="toast-message">${message}</div>
-                    <button class="toast-close">&times;</button>
-                `;
-                
-                toastContainer.appendChild(toast);
-                
-                // Show toast
-                setTimeout(() => toast.classList.add('show'), 10);
-                
-                // Auto-hide toast after 5 seconds
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300);
-                }, 5000);
-                
-                // Close button functionality
-                toast.querySelector('.toast-close').addEventListener('click', function () {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300);
-                });
+                return;
             }
+            
+            // Fallback implementation for toast messages
+            const toastContainer = document.getElementById('toast-container') || createToastContainer();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            // Determine icon class based on toast type
+            let iconClass = '';
+            switch (type) {
+                case 'success':
+                    iconClass = 'fa-check-circle';
+                    break;
+                case 'error':
+                    iconClass = 'fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    iconClass = 'fa-exclamation-triangle';
+                    break;
+                case 'info':
+                default:
+                    iconClass = 'fa-info-circle';
+                    break;
+            }
+            
+            // Create toast content
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas ${iconClass}"></i>
+                </div>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close" aria-label="Schließen">&times;</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Show toast with animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Auto-hide toast after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+            
+            // Close button functionality
+            toast.querySelector('.toast-close').addEventListener('click', function() {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            });
         } catch (e) {
             console.warn('Failed to show toast:', e);
         }
     }
     
     /**
-     * Erstellt einen Toast-Container, wenn noch keiner existiert
-     * @returns {HTMLElement} Der Toast-Container
+     * Creates a toast container if none exists
+     * @returns {HTMLElement} The toast container
      */
     function createToastContainer() {
         const container = document.createElement('div');
@@ -202,23 +205,23 @@ window.legalUtils = (function() {
     }
 
     /**
-     * Lädt rechtliche Dokumente als PDF herunter
-     * @param {string} pageType - Der Typ der Seite ('agb', 'datenschutz')
+     * Downloads legal documents as PDF
+     * @param {string} pageType - The type of page ('agb', 'datenschutz')
      */
     function downloadLegalAsPdf(pageType) {
-        // Prüfen, ob die jsPDF-Bibliothek geladen ist
+        // Check if jsPDF library is loaded
         if (typeof window.jspdf === 'undefined') {
-            safeShowToast('Die PDF-Bibliothek konnte nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
+            showToast('Die PDF-Bibliothek konnte nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
             return;
         }
         
-        // Anzeigen eines Lade-Toasts
-        safeShowToast('PDF wird erstellt. Bitte warten...', 'info');
+        // Show loading toast
+        showToast('PDF wird erstellt. Bitte warten...', 'info');
         
-        // Verzögerung, um dem Toast Zeit zur Anzeige zu geben
+        // Delay to allow toast to display
         setTimeout(() => {
             try {
-                // Die jsPDF-Bibliothek initialisieren
+                // Initialize jsPDF library
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({
                     orientation: 'portrait',
@@ -227,143 +230,145 @@ window.legalUtils = (function() {
                     compress: true
                 });
                 
-                // Konfiguration basierend auf Seitentyp
-                let title, subject, articleSelector, headerSelector, numberSelector, dateElement;
-                let filename, headerText;
-                let contentSelectors;
+                // Configuration based on page type
+                let title, subject, filename, headerText;
+                let dateElement = document.querySelector('.elegant-heading p');
                 
                 switch(pageType) {
                     case 'agb':
                         title = 'Allgemeine Geschäftsbedingungen - Kickerscup';
                         subject = 'AGB';
-                        articleSelector = '.legal-article';
-                        headerSelector = '.legal-article-header h3';
-                        numberSelector = '.legal-article-number';
-                        dateElement = document.querySelector('.elegant-heading p');
                         filename = 'Kickerscup-AGB.pdf';
                         headerText = 'Allgemeine Geschäftsbedingungen';
-                        contentSelectors = ['.legal-article-content p', '.legal-article-content ul li'];
                         break;
                     case 'datenschutz':
                         title = 'Datenschutzerklärung - Kickerscup';
                         subject = 'Datenschutz';
-                        articleSelector = '.legal-article';
-                        headerSelector = '.legal-article-header h3';
-                        numberSelector = '.legal-article-number';
-                        dateElement = document.querySelector('.elegant-heading p');
                         filename = 'Kickerscup-Datenschutz.pdf';
                         headerText = 'Datenschutzerklärung';
-                        contentSelectors = ['.legal-article-content p', '.legal-article-content h4', '.legal-article-content ul li'];
                         break;
                     default:
                         throw new Error('Ungültiger Seitentyp');
                 }
                 
-                // Titel und Metadaten hinzufügen
+                // Add title and metadata
                 doc.setProperties({
                     title: title,
                     subject: subject,
-                    author: 'Jan Steiger, Betreiber des Spiels „Kickerscup“.',
+                    author: 'Jan Steiger, Betreiber des Spiels „Kickerscup".',
                     keywords: `${subject}, Kickerscup`,
                     creator: 'Kickerscup'
                 });
                 
-                // Einstellungen für Text
+                // Document title
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(18);
-                doc.setTextColor(255, 138, 0); // Primary-Farbe
-                
-                // Titel hinzufügen
+                doc.setTextColor(255, 138, 0);
                 doc.text(headerText, 20, 20);
                 
-                // Datum hinzufügen
+                // Document date
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
                 doc.setTextColor(100, 100, 100);
                 doc.text(`${dateElement ? dateElement.textContent : 'Stand: 21.03.2025'}`, 20, 30);
                 
-                // Horizontal Line
+                // Horizontal line
                 doc.setDrawColor(255, 138, 0);
                 doc.setLineWidth(0.5);
                 doc.line(20, 35, 190, 35);
                 
-                // Artikelinhalt extrahieren und in PDF einfügen
+                // Extract and add article content
                 let yPosition = 45;
-                const articles = document.querySelectorAll(articleSelector);
+                const articles = document.querySelectorAll('.legal-article');
                 
-                articles.forEach((article, index) => {
-                    // Wenn die Position zu weit unten ist, neue Seite anfangen
+                articles.forEach((article) => {
+                    // Start new page if needed
                     if (yPosition > 270) {
                         doc.addPage();
                         yPosition = 20;
                     }
                     
-                    const header = article.querySelector(headerSelector).textContent;
-                    const number = article.querySelector(numberSelector).textContent;
+                    const header = article.querySelector('.legal-article-header h3').textContent;
+                    const number = article.querySelector('.legal-article-number').textContent;
                     
-                    // Artikelnummer und Header
+                    // Article number and header
                     doc.setFont('helvetica', 'bold');
                     doc.setFontSize(14);
                     doc.setTextColor(255, 138, 0);
                     doc.text(`${number}. ${header}`, 20, yPosition);
                     yPosition += 8;
                     
-                    // Artikelinhalt
+                    // Process paragraphs
                     doc.setFont('helvetica', 'normal');
                     doc.setFontSize(11);
                     doc.setTextColor(50, 50, 50);
                     
+                    // Add paragraphs
                     const paragraphs = article.querySelectorAll('.legal-article-content p');
                     paragraphs.forEach(paragraph => {
-                        // Prüfen, ob ein Zeilenumbruch erforderlich ist
                         if (yPosition > 270) {
                             doc.addPage();
                             yPosition = 20;
                         }
-
-                        // Text aufteilen und über mehrere Zeilen verteilen, falls nötig
+                        
                         const textLines = doc.splitTextToSize(paragraph.textContent, 170);
                         doc.text(textLines, 20, yPosition);
                         yPosition += 6 * textLines.length;
                     });
                     
-                    const listItems = article.querySelectorAll('.legal-article-content ul li, .legal-list li');
-                    listItems.forEach(item => {
-                        // Prüfen, ob ein Zeilenumbruch erforderlich ist
+                    // Add subheadings (for Datenschutz)
+                    const subheadings = article.querySelectorAll('.legal-article-content h4');
+                    subheadings.forEach(heading => {
                         if (yPosition > 270) {
                             doc.addPage();
                             yPosition = 20;
                         }
-
-                        // Text mit Aufzählungszeichen
+                        
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(12);
+                        doc.text(heading.textContent, 20, yPosition);
+                        yPosition += 6;
+                        
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(11);
+                    });
+                    
+                    // Add list items
+                    const listItems = article.querySelectorAll('.legal-article-content ul li, .legal-list li');
+                    listItems.forEach(item => {
+                        if (yPosition > 270) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+                        
                         const textLines = doc.splitTextToSize(`• ${item.textContent}`, 165);
                         doc.text(textLines, 25, yPosition);
                         yPosition += 6 * textLines.length;
                     });
                     
-                    // Abstand zwischen Artikeln
+                    // Space between articles
                     yPosition += 10;
                 });
                 
-                // Footer mit Unternehmensinformationen
+                // Add footer to all pages
                 addDocumentFooter(doc);
                 
-                // PDF speichern
+                // Save PDF
                 doc.save(filename);
                 
-                // Erfolgsmeldung anzeigen
-                safeShowToast(`${subject} wurde erfolgreich als PDF heruntergeladen!`, 'success');
+                // Show success message
+                showToast(`${subject} wurde erfolgreich als PDF heruntergeladen!`, 'success');
                 
             } catch (error) {
                 console.error('Fehler beim Erstellen des PDFs:', error);
-                safeShowToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
+                showToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
             }
         }, 300);
     }
     
     /**
-     * Fügt einen Footer zu allen Seiten des Dokuments hinzu
-     * @param {Object} doc - Das PDF-Dokument
+     * Adds footer to all pages of the document
+     * @param {Object} doc - The PDF document
      */
     function addDocumentFooter(doc) {
         const pageCount = doc.getNumberOfPages();
@@ -372,45 +377,39 @@ window.legalUtils = (function() {
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
             doc.setTextColor(150, 150, 150);
-            doc.text('Jan Steiger, Betreiber des Spiels „Kickerscup“. • Pulverhäuserweg 72a • 64295 Darmstadt • Deutschland', 20, 285);
+            doc.text('Jan Steiger, Betreiber des Spiels „Kickerscup". • Pulverhäuserweg 72a • 64295 Darmstadt • Deutschland', 20, 285);
             doc.text(`Seite ${i} von ${pageCount}`, 170, 285);
         }
     }
 
     /**
-     * Initialisiert das Datenschutz-Anfrage-Modal
+     * Initializes the data protection request modal
      */
     function initDatenschutzAnfrageModal() {
-        const modalTrigger = document.getElementById('datenschutzFormular');
-        // Korrigiert auf "legalFormular" basierend auf der HTML-Vorlage
-        if (!modalTrigger) {
-            const legalFormular = document.getElementById('legalFormular');
-            if (legalFormular) {
-                initializeModal(legalFormular, 'legalAnfrageModal');
+        const modalTriggers = [
+            document.getElementById('datenschutzFormular'),
+            document.getElementById('legalFormular')
+        ];
+        
+        const modal = document.getElementById('legalAnfrageModal') || 
+                      document.getElementById('datenschutzAnfrageModal');
+        
+        if (!modal) return;
+        
+        const closeModalBtn = modal.querySelector('.close-modal');
+        const form = modal.querySelector('.legal-anfrage-form');
+        
+        // Set up event listeners for all possible trigger buttons
+        modalTriggers.forEach(trigger => {
+            if (trigger) {
+                trigger.addEventListener('click', function() {
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
             }
-            return;
-        }
-        
-        initializeModal(modalTrigger, 'datenschutzAnfrageModal');
-    }
-    
-    /**
-     * Initialisiert ein Modal für Anfragen
-     * @param {HTMLElement} trigger - Das Auslöserelement
-     * @param {string} modalId - Die ID des Modals
-     */
-    function initializeModal(trigger, modalId) {
-        const modal = document.getElementById(modalId);
-        const closeModalBtn = modal ? modal.querySelector('.close-modal') : null;
-        const form = modal ? modal.querySelector('.legal-anfrage-form') : null;
-        
-        if (!trigger || !modal) return;
-        
-        trigger.addEventListener('click', function() {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         });
         
+        // Close button functionality
         if (closeModalBtn) {
             closeModalBtn.addEventListener('click', function() {
                 modal.style.display = 'none';
@@ -418,7 +417,7 @@ window.legalUtils = (function() {
             });
         }
         
-        // Schließen des Modals beim Klick außerhalb des Inhalts
+        // Close modal when clicking outside content
         window.addEventListener('click', function(e) {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -426,17 +425,21 @@ window.legalUtils = (function() {
             }
         });
         
-        // Formularverarbeitung
+        // Form processing
         if (form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Hier würde normalerweise der API-Aufruf zur Verarbeitung der Anfrage erfolgen
-                // Demo-Implementierung
+                // Form data collection
+                const formData = new FormData(this);
+                const requestData = Object.fromEntries(formData.entries());
                 
-                safeShowToast('Ihre Datenschutz-Anfrage wurde erfolgreich übermittelt. Wir werden uns schnellstmöglich bei Ihnen melden.', 'success');
+                // Here would be the API call to process the request
+                console.log('Processing data protection request:', requestData);
                 
-                // Modal schließen und Formular zurücksetzen
+                showToast('Ihre Datenschutz-Anfrage wurde erfolgreich übermittelt. Wir werden uns schnellstmöglich bei Ihnen melden.', 'success');
+                
+                // Close modal and reset form
                 modal.style.display = 'none';
                 document.body.style.overflow = '';
                 form.reset();
@@ -445,7 +448,7 @@ window.legalUtils = (function() {
     }
 
     /**
-     * Initialisiert die Cookie-Einstellungen
+     * Initializes cookie settings functionality
      */
     function initCookieSettings() {
         const cookieSettingsBtn = document.getElementById('openCookieSettings');
@@ -453,32 +456,38 @@ window.legalUtils = (function() {
         if (!cookieSettingsBtn) return;
         
         cookieSettingsBtn.addEventListener('click', function() {
-            // Wenn es einen globalen Cookie-Banner gibt, diesen anzeigen
+            // Use global cookie banner function if available
             if (window.showCookieBanner && typeof window.showCookieBanner === 'function') {
                 window.showCookieBanner();
             } else {
-                // Fallback, wenn keine globale Funktion verfügbar ist
+                // Fallback if no global function is available
                 const cookieBanner = document.getElementById('cookie-banner');
                 if (cookieBanner) {
                     cookieBanner.style.display = 'block';
-                    // Aktiviere Details-Ansicht
+                    
+                    // Enable detailed view
                     const detailsToggle = document.getElementById('cookie-details-toggle');
                     const detailsContent = document.getElementById('cookie-details');
+                    
                     if (detailsToggle && detailsContent) {
                         detailsContent.classList.add('active');
                         detailsToggle.classList.add('active');
                         detailsToggle.setAttribute('aria-expanded', 'true');
-                        detailsToggle.querySelector('.toggle-text').textContent = 'Details ausblenden';
+                        
+                        const toggleText = detailsToggle.querySelector('.toggle-text');
+                        if (toggleText) {
+                            toggleText.textContent = 'Details ausblenden';
+                        }
                     }
                 } else {
-                    safeShowToast('Cookie-Einstellungen sind derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.', 'info');
+                    showToast('Cookie-Einstellungen sind derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.', 'info');
                 }
             }
         });
     }
 
     /**
-     * Google Analytics Opt-Out Funktion
+     * Google Analytics Opt-Out functionality
      */
     function initGoogleAnalyticsOptOut() {
         const gaOptOutLink = document.getElementById('ga-opt-out');
@@ -488,22 +497,22 @@ window.legalUtils = (function() {
         gaOptOutLink.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Google Analytics Opt-Out Cookie setzen
+            // Set Google Analytics Opt-Out cookie
             const date = new Date();
-            date.setTime(date.getTime() + (10 * 365 * 24 * 60 * 60 * 1000)); // 10 Jahre
+            date.setTime(date.getTime() + (10 * 365 * 24 * 60 * 60 * 1000)); // 10 years
             document.cookie = 'ga-opt-out=1; expires=' + date.toUTCString() + '; path=/; domain=.' + window.location.hostname + '; samesite=lax';
             
-            // Wenn Google Analytics vorhanden ist, deaktivieren
+            // Disable Google Analytics if present
             if (window.hasOwnProperty('ga-disable-UA-XXXXXXXX-X')) {
                 window['ga-disable-UA-XXXXXXXX-X'] = true;
             }
             
-            safeShowToast('Google Analytics wurde für diese Website deaktiviert. Das Tracking-Cookie wurde gesetzt.', 'success');
+            showToast('Google Analytics wurde für diese Website deaktiviert. Das Tracking-Cookie wurde gesetzt.', 'success');
         });
     }
     
     /**
-     * Initialisiert Links zu früheren Versionen der Datenschutzerklärung
+     * Initializes links to previous versions of the privacy policy
      */
     function initVersionLinks() {
         const versionLinks = document.querySelectorAll('.legal-version-link');
@@ -516,33 +525,33 @@ window.legalUtils = (function() {
                 
                 const versionDate = this.querySelector('.version-date').textContent;
                 
-                // Hier würde normalerweise der Download der entsprechenden Version erfolgen
-                // Demo-Implementierung
-                safeShowToast(`Version vom ${versionDate} wird heruntergeladen...`, 'info');
+                // Here would normally be the download of the corresponding version
+                // Demo implementation
+                showToast(`Version vom ${versionDate} wird heruntergeladen...`, 'info');
                 
-                // Simuliere Verzögerung für den Download
+                // Simulate download delay
                 setTimeout(() => {
-                    safeShowToast(`Die Datenschutzerklärung (Version: ${versionDate}) wurde erfolgreich heruntergeladen.`, 'success');
+                    showToast(`Die Datenschutzerklärung (Version: ${versionDate}) wurde erfolgreich heruntergeladen.`, 'success');
                 }, 1500);
             });
         });
     }
     
     /**
-     * Initialisiert Touch-Feedback für Legal Cards auf mobilen Geräten
+     * Initializes touch feedback for legal cards on mobile devices
      */
     function initLegalCardTouchFeedback() {
-        if (window.innerWidth > 767) return; // Nur für mobile Geräte
+        if (window.innerWidth > 767) return; // Only for mobile devices
         
-        const legalCards = document.querySelectorAll('.legal-article');
+        const legalCards = document.querySelectorAll('.legal-article, .legal-card');
         
         legalCards.forEach(card => {
             card.addEventListener('touchstart', function(e) {
-                // Erstelle ein Ripple-Element
+                // Create ripple element
                 const ripple = document.createElement('span');
                 ripple.classList.add('touch-feedback');
                 
-                // Positioniere das Ripple an der Berührungsstelle
+                // Position ripple at touch point
                 const rect = this.getBoundingClientRect();
                 const x = e.touches[0].clientX - rect.left;
                 const y = e.touches[0].clientY - rect.top;
@@ -550,40 +559,53 @@ window.legalUtils = (function() {
                 ripple.style.left = x + 'px';
                 ripple.style.top = y + 'px';
                 
-                // Füge das Ripple zum Element hinzu
+                // Add ripple to element
                 this.appendChild(ripple);
                 
-                // Entferne das Ripple nach der Animation
+                // Remove ripple after animation
                 setTimeout(() => {
                     ripple.remove();
                 }, 600);
             });
         });
     }
-    
-    /**
-     * Prüft, ob ein bestimmtes Feature verfügbar ist
-     * @param {string} featureName - Der Name des Features
-     * @returns {boolean} Gibt true zurück, wenn das Feature verfügbar ist
-     */
-    function isFeatureAvailable(featureName) {
-        // In einer realen Implementierung könnte hier eine Konfiguration geprüft werden
-        // Demo-Implementierung gibt immer true zurück
-        return true;
-    }
 
-    // Öffentliche API
+    // Public API
     return {
         initLegalPage,
         downloadLegalAsPdf,
-        safeShowToast,
-        isFeatureAvailable
+        showToast,
+        initTocScrolling,
+        initLegalCardTouchFeedback
     };
 })();
 
-// Automatische Initialisierung, wenn das DOM geladen ist
+/**
+ * Compatibility fallbacks for agb.js and datenschutz.js
+ * These global functions ensure backward compatibility with existing code
+ */
+
+// Global fallback for AGB PDF download
+window.downloadAgbAsPdf = function() {
+    if (window.legalUtils && typeof window.legalUtils.downloadLegalAsPdf === 'function') {
+        window.legalUtils.downloadLegalAsPdf('agb');
+    } else {
+        console.error('legalUtils not available for downloadAgbAsPdf');
+    }
+};
+
+// Global fallback for Datenschutz PDF download
+window.downloadDatenschutzAsPdf = function() {
+    if (window.legalUtils && typeof window.legalUtils.downloadLegalAsPdf === 'function') {
+        window.legalUtils.downloadLegalAsPdf('datenschutz');
+    } else {
+        console.error('legalUtils not available for downloadDatenschutzAsPdf');
+    }
+};
+
+// Auto-initialization when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Erkennen der aktuellen Seite anhand der URL oder des Body-Klassennamens
+    // Detect current page based on URL path
     const currentPath = window.location.pathname;
     
     if (currentPath.includes('agb')) {
@@ -592,5 +614,15 @@ document.addEventListener('DOMContentLoaded', function() {
         window.legalUtils.initLegalPage('datenschutz');
     } else if (currentPath.includes('impressum')) {
         window.legalUtils.initLegalPage('impressum');
+    } else {
+        // Check for legal elements to determine page type
+        const agbElements = document.querySelectorAll('.AgbSection, #agb-1');
+        const datenschutzElements = document.querySelectorAll('.datenschutz-section, #ds-1');
+        
+        if (agbElements.length > 0) {
+            window.legalUtils.initLegalPage('agb');
+        } else if (datenschutzElements.length > 0) {
+            window.legalUtils.initLegalPage('datenschutz');
+        }
     }
 });

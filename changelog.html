@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog - Kickerscup</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="stylesheet" href="css/changelog.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Background Container -->
+<div class="bg-container">
+    <div class="bg-overlay"></div>
+    <div class="bg-image"></div>
+</div>
+
+<!-- Header -->
+<header>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile Menu Overlay zum Schließen -->
+    <div class="mobile-menu-overlay"></div>
+
+    <nav>
+        <!-- Der Close-Button wird durch JavaScript hinzugefügt, wenn er noch nicht existiert -->
+        <button class="mobile-close-btn" aria-label="Menü schließen">&times;</button>
+
+        <!-- Updated Language Selector with CDN Flags -->
+        <div class="lang-switch">
+            <button type="button" class="lang-selector" aria-expanded="false" aria-haspopup="true">
+                <img src="https://flagcdn.com/w20/de.png" alt="DE Flag" class="flag-icon">
+                <span class="current-lang">DE</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-dropdown" role="menu">
+                <a href="#" class="lang-option active" role="menuitem">
+                    <img src="https://flagcdn.com/w20/de.png" alt="DE Flag" class="flag-icon">
+                    Deutsch
+                </a>
+                <a href="#" class="lang-option" role="menuitem">
+                    <img src="https://flagcdn.com/w20/gb.png" alt="GB Flag" class="flag-icon">
+                    English
+                </a>
+                <a href="#" class="lang-option" role="menuitem">
+                    <img src="https://flagcdn.com/w20/fr.png" alt="FR Flag" class="flag-icon">
+                    Français
+                </a>
+                <a href="#" class="lang-option" role="menuitem">
+                    <img src="https://flagcdn.com/w20/es.png" alt="ES Flag" class="flag-icon">
+                    Español
+                </a>
+            </div>
+        </div>
+
+        <div class="auth-buttons">
+            <a href="#" class="login-btn"><i class="fas fa-user"></i> Login</a>
+            <a href="#" class="register-btn">Registrieren</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<main>
+    <section class="changelog-section elegant-section">
+        <div class="elegant-container">
+            <div class="elegant-heading animate-fadeUp">
+                <h1>Changelog</h1>
+                <div class="elegant-divider"></div>
+                <p>Alle Updates und Verbesserungen des Kickerscup im Überblick</p>
+            </div>
+
+            <div class="changelog-container">
+                <!-- Versions Filter -->
+                <div class="changelog-filter animate-fadeUp">
+                    <div class="filter-header">
+                        <i class="fas fa-filter"></i>
+                        <h3>Versionen</h3>
+                    </div>
+                    <div class="filter-content">
+                        <div class="filter-search">
+                            <input type="text" id="changelog-search" placeholder="Suche in Änderungen...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-group">
+                                <h4>Version</h4>
+                                <select id="version-filter">
+                                    <option value="all">Alle Versionen</option>
+                                    <option value="1.2">Version 1.2.x</option>
+                                    <option value="1.1">Version 1.1.x</option>
+                                    <option value="1.0">Version 1.0.x</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <h4>Kategorie</h4>
+                                <div class="changelog-category-filters">
+                                    <label class="changelog-category-filter">
+                                        <input type="checkbox" value="features" checked>
+                                        <span class="category-label feature">Features</span>
+                                    </label>
+                                    <label class="changelog-category-filter">
+                                        <input type="checkbox" value="improvements" checked>
+                                        <span class="category-label improvement">Verbesserungen</span>
+                                    </label>
+                                    <label class="changelog-category-filter">
+                                        <input type="checkbox" value="bugfixes" checked>
+                                        <span class="category-label bugfix">Bugfixes</span>
+                                    </label>
+                                    <label class="changelog-category-filter">
+                                        <input type="checkbox" value="removed" checked>
+                                        <span class="category-label removed">Entfernt</span>
+                                    </label>
+                                    <label class="changelog-category-filter">
+                                        <input type="checkbox" value="technical" checked>
+                                        <span class="category-label technical">Technisch</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button id="reset-filters" class="changelog-btn-secondary">Filter zurücksetzen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Changelog Content -->
+                <div class="changelog-content animate-fadeUp">
+                    <!-- Version 1.2.5 -->
+                    <div class="changelog-version" data-version="1.2.5">
+                        <div class="version-header">
+                            <div class="version-badge">v1.2.5</div>
+                            <div class="version-date">21. März 2025</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Neues taktisches Layout mit 15 zusätzlichen Aufstellungsvarianten</li>
+                                    <li>Einführung des "Vereinsruhm" Systems - Sammle Auszeichnungen und steigere die Attraktivität deines Vereins</li>
+                                    <li>Freundschaftsspiele jetzt auch gegen KI-Teams möglich</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Überarbeitetes Stadionausbau-System mit detaillierten 3D-Vorschauen</li>
+                                    <li>Erweiterte Spielerstatistiken mit Heatmaps und Leistungsanalysen</li>
+                                    <li>Optimiertes Matchmaking-System für ausgeglichenere Ligaspiele</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category bugfixes">
+                                <h3><i class="fas fa-bug"></i> Bugfixes</h3>
+                                <ul>
+                                    <li>Behoben: Spielerinformationen wurden in manchen Fällen falsch angezeigt</li>
+                                    <li>Behoben: Probleme mit der Team-Chemie-Berechnung bei Spielerrotationen</li>
+                                    <li>Behoben: Gelegentliche Abstürze beim Saisonwechsel</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category technical">
+                                <h3><i class="fas fa-code"></i> Technische Änderungen</h3>
+                                <ul>
+                                    <li>Performance-Optimierungen für schnellere Ladezeiten</li>
+                                    <li>Verbesserte Kompatibilität mit älteren Browsern</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.2.4 -->
+                    <div class="changelog-version" data-version="1.2.4">
+                        <div class="version-header">
+                            <div class="version-badge">v1.2.4</div>
+                            <div class="version-date">15. Februar 2025</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Einführung des "Vereinslegende"-Status für langjährige Spieler</li>
+                                    <li>Neues Abzeichen-System für besondere Leistungen</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Verbesserte Nachwuchsakademie mit mehr Entscheidungsmöglichkeiten</li>
+                                    <li>Überarbeitete Sponsorenverträge mit dynamischen Angeboten</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category bugfixes">
+                                <h3><i class="fas fa-bug"></i> Bugfixes</h3>
+                                <ul>
+                                    <li>Behoben: Fehlerhafte Berechnung der Fanunterstützung bei Auswärtsspielen</li>
+                                    <li>Behoben: Probleme mit der Anzeige von Langzeitstatistiken</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.2.3 -->
+                    <div class="changelog-version" data-version="1.2.3">
+                        <div class="version-header">
+                            <div class="version-badge">v1.2.3</div>
+                            <div class="version-date">3. Januar 2025</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Winterturnier mit exklusiven Belohnungen</li>
+                                    <li>Neue Trainingslager-Optionen mit verschiedenen Spezialisierungen</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Verbesserte Spielercharakterentwicklung basierend auf Spielpraxis</li>
+                                    <li>Detailliertere Spielanalysen mit neuen Grafikdarstellungen</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category bugfixes">
+                                <h3><i class="fas fa-bug"></i> Bugfixes</h3>
+                                <ul>
+                                    <li>Behoben: Verletzungsberechnung bei unterschiedlichen Trainingsintensitäten</li>
+                                    <li>Behoben: Seltener Fehler beim Laden von Pokalspielständen</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category removed">
+                                <h3><i class="fas fa-trash-alt"></i> Entfernte Funktionen</h3>
+                                <ul>
+                                    <li>Alte Version des Skill-Training-Systems entfernt</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.2.2 -->
+                    <div class="changelog-version" data-version="1.2.2">
+                        <div class="version-header">
+                            <div class="version-badge">v1.2.2</div>
+                            <div class="version-date">5. Dezember 2024</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Community-Events mit speziellen Belohnungen</li>
+                                    <li>Einführung des Vereinsarchivs zur Einsicht vergangener Erfolge</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Optimierte Benutzeroberfläche für Mobilgeräte</li>
+                                    <li>Erweiterte Filtermöglichkeiten im Transfermarkt</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category technical">
+                                <h3><i class="fas fa-code"></i> Technische Änderungen</h3>
+                                <ul>
+                                    <li>Backend-Optimierungen für stabilere Serverlast</li>
+                                    <li>Verbessertes Caching-System für schnellere Ladezeiten</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.2.1 -->
+                    <div class="changelog-version" data-version="1.2.1">
+                        <div class="version-header">
+                            <div class="version-badge">v1.2.1</div>
+                            <div class="version-date">18. November 2024</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category bugfixes">
+                                <h3><i class="fas fa-bug"></i> Bugfixes</h3>
+                                <ul>
+                                    <li>Behoben: Kritischer Fehler bei der Simulation von Pokalendspielen</li>
+                                    <li>Behoben: Spielstände wurden unter bestimmten Umständen nicht korrekt gespeichert</li>
+                                    <li>Behoben: Problem mit der Anzeige von Spielerbewertungen nach Spielertransfers</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Erhöhte Serverkapazität für schnellere Reaktionszeiten</li>
+                                    <li>Verbessertes Feedback-System für Benutzervorschläge</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.2.0 -->
+                    <div class="changelog-version" data-version="1.2.0">
+                        <div class="version-header">
+                            <div class="version-badge major">v1.2.0</div>
+                            <div class="version-date">1. November 2024</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Völlig neues Jugendakademie-System mit erweiterten Entwicklungspfaden</li>
+                                    <li>Internationaler Vereinswettbewerb mit 64 Teams</li>
+                                    <li>Einführung des Vereinsprestige-Systems mit Fanreaktionen</li>
+                                    <li>Dynamisches Wetter-System mit Einfluss auf Spielverlauf</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Komplett überarbeitete Simulation-Engine für realistischere Spiele</li>
+                                    <li>Neue 3D-Stadionansichten mit verbesserten Animationen</li>
+                                    <li>Überarbeitetes Finanzsystem mit komplexeren wirtschaftlichen Faktoren</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category bugfixes">
+                                <h3><i class="fas fa-bug"></i> Bugfixes</h3>
+                                <ul>
+                                    <li>Mehrere Stabilitätsverbesserungen im Spielverlauf</li>
+                                    <li>Behoben: Synchronisationsprobleme bei Ligatabellen</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category technical">
+                                <h3><i class="fas fa-code"></i> Technische Änderungen</h3>
+                                <ul>
+                                    <li>Vollständige Überarbeitung der Spieler-KI</li>
+                                    <li>Implementierung einer neuen Rendering-Engine</li>
+                                    <li>Modernisierte Datenbankstrukturen für bessere Performance</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.5 -->
+                    <div class="changelog-version" data-version="1.1.5">
+                        <div class="version-header">
+                            <div class="version-badge">v1.1.5</div>
+                            <div class="version-date">15. September 2024</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Einführung von Team-Boni für spezifische Spielerkonstellationen</li>
+                                    <li>Neues Trikot-Anpassungssystem mit 50+ Designs</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Verfeinerte Spielercharakteristiken mit mehr Einfluss auf Performance</li>
+                                    <li>Verbesserte KI für nicht-spielergesteuerte Teams</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category bugfixes">
+                                <h3><i class="fas fa-bug"></i> Bugfixes</h3>
+                                <ul>
+                                    <li>Behoben: Problem mit der Berechnung von Team-Moral</li>
+                                    <li>Behoben: Fehlende Spielerstatistiken in bestimmten Ligaspielen</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.0 -->
+                    <div class="changelog-version" data-version="1.1.0">
+                        <div class="version-header">
+                            <div class="version-badge major">v1.1.0</div>
+                            <div class="version-date">1. Juli 2024</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Neue Features</h3>
+                                <ul>
+                                    <li>Einführung des Transfermarkt-Systems mit Live-Auktionen</li>
+                                    <li>Spielerentwicklungssystem mit individualisierbaren Trainingsplänen</li>
+                                    <li>Vereinsfinanzen mit Budget- und Sponsorenmanagement</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category improvements">
+                                <h3><i class="fas fa-arrow-up"></i> Verbesserungen</h3>
+                                <ul>
+                                    <li>Verbesserte Matchsimulation mit detaillierten Ereignissen</li>
+                                    <li>Erweitertes Ligasystem mit Auf- und Abstiegsregelungen</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category removed">
+                                <h3><i class="fas fa-trash-alt"></i> Entfernte Funktionen</h3>
+                                <ul>
+                                    <li>Altes Trainingskartenmodell entfernt zugunsten des neuen Systems</li>
+                                    <li>Simplistische Finanzen durch komplexeres System ersetzt</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-category technical">
+                                <h3><i class="fas fa-code"></i> Technische Änderungen</h3>
+                                <ul>
+                                    <li>Komplette Backend-Überarbeitung für bessere Skalierbarkeit</li>
+                                    <li>Neue Datenbankstruktur für schnellere Abfragen</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.0.0 -->
+                    <div class="changelog-version" data-version="1.0.0">
+                        <div class="version-header">
+                            <div class="version-badge major">v1.0.0</div>
+                            <div class="version-date">15. Juni 2024</div>
+                            <button class="version-toggle" aria-label="Details anzeigen/ausblenden">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="version-content">
+                            <div class="changelog-category features">
+                                <h3><i class="fas fa-star"></i> Initiale Veröffentlichung</h3>
+                                <ul>
+                                    <li>Grundlegendes Fußballmanager-System mit Team-Management</li>
+                                    <li>Erstelle und verwalte deinen eigenen virtuellen Fußballclub</li>
+                                    <li>Matchsimulation mit Echtzeit-Ergebnissen</li>
+                                    <li>Ligastruktur mit Saisonplanung</li>
+                                    <li>Einfaches Spielerentwicklungssystem</li>
+                                    <li>Grundlegende Community-Funktionen</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-container">
+        <div class="social-links">
+            <span>Folge uns:</span>
+            <a href="#" class="social-icon" aria-label="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-icon" aria-label="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+
+        <div class="footer-links">
+            <a href="changelog.html">Changelog</a>
+            <a href="datenschutz.html">Datenschutz</a>
+            <a href="agb.html">AGB</a>
+            <a href="impressum.html">Impressum</a>
+        </div>
+
+        <div class="footer-copyright">
+            © 2025 Kickerscup <span class="with-love">Mit <span
+                class="heart">♥</span> in Deutschland entwickelt</span><span class="version">v1.2.5</span>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript einbinden -->
+<script src="js/main.js"></script>
+<script src="js/changelog.js"></script>
+</body>
+</html>
