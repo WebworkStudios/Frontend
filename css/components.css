@@ -1,4 +1,16 @@
-/* components.css */
+/* components.css - Optimized Version */
+
+/* Custom Properties for reusable values */
+:root {
+    --card-bg: rgba(26, 26, 26, 0.5);
+    --card-border: 1px solid rgba(255, 255, 255, 0.05);
+    --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    --card-hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    --blur-effect: blur(10px);
+    --hover-transform: translateY(-5px);
+    --card-padding: 20px;
+}
+
 /* Hero Section */
 .hero-section {
     padding: 40px 0;
@@ -41,7 +53,6 @@
 }
 
 /* Player Icon */
-
 .player-icon {
     width: 5rem;
     height: 5rem;
@@ -63,11 +74,9 @@
     flex-direction: column;
     gap: 15px;
     justify-content: center;
-    margin-top: 30px;
+    margin: 30px auto 0;
     width: 100%;
     max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .btn {
@@ -163,18 +172,12 @@
     border-radius: 3px;
 }
 
-/* Stats Section */
+/* Stats Section - Optimized */
 .stats-section {
     padding: 40px 0;
     position: relative;
     width: 100%;
     margin: 1rem auto 2rem;
-}
-
-.stat-item,
-.stats-container {
-    position: relative;
-    overflow: hidden;
 }
 
 .stats-container {
@@ -187,6 +190,8 @@
     box-shadow: var(--box-shadow);
     width: 90%;
     margin: 0 auto;
+    position: relative;
+    overflow: hidden;
 }
 
 .stats-container::before {
@@ -201,18 +206,22 @@
 }
 
 .stat-item {
-    background: rgba(26, 26, 26, 0.5);
+    background: var(--card-bg);
     border-radius: 15px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: var(--blur-effect);
     padding: 25px 15px;
     text-align: center;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
 }
 
 .stat-item:hover {
-    transform: translateY(-8px);
+    transform: var(--hover-transform);
+    box-shadow: var(--card-hover-shadow);
 }
 
 .stat-item::before {
@@ -286,7 +295,7 @@
     content: "";
     width: 8px;
     height: 8px;
-    background-color: #4cd137;
+    background-color: var(--success);
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -294,7 +303,7 @@
     animation: pulse-shadow 2s infinite;
 }
 
-/* Features Section */
+/* Features Section - Optimized */
 .features-section {
     padding: 50px 0;
     position: relative;
@@ -309,32 +318,31 @@
     margin: 0 auto;
 }
 
-.feature-image,
 .feature-item {
-    overflow: hidden;
-    position: relative;
-}
-
-.feature-item {
-    background: rgba(26, 26, 26, 0.5);
+    background: var(--card-bg);
     border-radius: 15px;
     transition: all 0.4s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: var(--blur-effect);
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    will-change: transform;
 }
 
 .feature-item:hover {
     border-color: rgba(var(--primary-rgb), 0.3);
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(var(--primary-rgb), 0.1);
+    transform: var(--hover-transform);
+    box-shadow: var(--card-hover-shadow), 0 0 15px rgba(var(--primary-rgb), 0.1);
 }
 
 .feature-image {
     height: 180px;
+    overflow: hidden;
+    position: relative;
 }
 
 .feature-image::after {
@@ -358,6 +366,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s ease;
+    will-change: transform;
 }
 
 .feature-item:hover .feature-image img {
@@ -365,7 +374,7 @@
 }
 
 .feature-content {
-    padding: 20px;
+    padding: var(--card-padding);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -401,7 +410,7 @@
     flex-grow: 1;
 }
 
-/* Countdown Section */
+/* Countdown Section - Optimized */
 .countdown-section {
     padding: 40px 0;
     text-align: center;
@@ -423,12 +432,12 @@
 .countdown-container {
     width: 90%;
     margin: 0 auto;
-    padding: 20px;
-    background: rgba(26, 26, 26, 0.5);
+    padding: var(--card-padding);
+    background: var(--card-bg);
     border-radius: 15px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: var(--blur-effect);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
 }
 
 .countdown-timer {
@@ -470,7 +479,8 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: var(--card-border);
+    will-change: transform;
 }
 
 .countdown-value::before {
@@ -500,10 +510,10 @@
     padding: 10px 20px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: var(--card-border);
 }
 
-/* FAQ Section */
+/* FAQ Section - Optimized */
 .faq-section {
     padding: 50px 0;
     position: relative;
@@ -518,12 +528,12 @@
 }
 
 .faq-item {
-    background: rgba(26, 26, 26, 0.5);
+    background: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: var(--card-border);
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
 }
 
 .faq-item.active {
@@ -532,7 +542,7 @@
 }
 
 .faq-question {
-    padding: 20px;
+    padding: var(--card-padding);
     font-weight: 500;
     font-size: 16px;
     cursor: pointer;
@@ -568,6 +578,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    will-change: max-height;
 }
 
 .faq-item.active .faq-answer {
@@ -575,13 +586,13 @@
 }
 
 .faq-answer-content {
-    padding: 0 20px 20px;
+    padding: 0 var(--card-padding) var(--card-padding);
     color: var(--text-muted);
     line-height: 1.6;
     font-size: 14px;
 }
 
-/* Cookie Banner */
+/* Cookie Banner - Optimized */
 .cookie-banner {
     position: fixed;
     bottom: 0;
@@ -643,6 +654,7 @@
     overflow: hidden;
     transition: max-height 0.3s ease;
     margin: 0.75rem 0;
+    will-change: max-height;
 }
 
 .cookie-details.active {
@@ -749,7 +761,7 @@
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Toast Container */
+/* Toast Container - Optimized */
 .toast-container {
     position: fixed;
     bottom: 10px;
@@ -773,6 +785,7 @@
     transition: transform 0.3s ease, opacity 0.3s ease;
     display: flex;
     align-items: center;
+    will-change: transform, opacity;
 }
 
 .toast.show {
@@ -810,20 +823,21 @@
     color: var(--text-light);
 }
 
+/* Toast color variations - Optimized with CSS variables */
 .toast-success {
-    border-left: 3px solid var(--secondary);
+    border-left: 3px solid var(--success);
 }
 
 .toast-success .toast-icon {
-    color: var(--secondary);
+    color: var(--success);
 }
 
 .toast-error {
-    border-left: 3px solid #f33;
+    border-left: 3px solid var(--error);
 }
 
 .toast-error .toast-icon {
-    color: #f33;
+    color: var(--error);
 }
 
 .toast-info {
@@ -842,7 +856,7 @@
     color: var(--warning);
 }
 
-/* Modal */
+/* Modal - Optimized */
 .modal {
     display: none;
     position: fixed;
@@ -859,7 +873,7 @@
 .modal-content {
     background: var(--medium-dark);
     border-radius: var(--border-radius);
-    padding: 20px;
+    padding: var(--card-padding);
     width: 100%;
     max-width: 90%;
     position: relative;
@@ -882,7 +896,7 @@
 
 .modal h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--card-padding);
     color: var(--text-light);
     font-size: 20px;
 }
@@ -941,6 +955,7 @@
     margin: 0 auto;
 }
 
+/* Form Groups - Optimized */
 .form-group {
     margin-bottom: 15px;
 }
@@ -1016,8 +1031,9 @@
 .strength-progress {
     height: 100%;
     width: 0;
-    background: #ff3333;
+    background: var(--error);
     transition: width 0.3s ease, background 0.3s ease;
+    will-change: width, background;
 }
 
 .strength-text {
@@ -1091,505 +1107,7 @@
     color: var(--primary);
 }
 
-/* Media Queries */
-@media (min-width: 768px) {
-    .hero-section {
-        padding: 80px 0;
-    }
-
-    .hero-section h1 {
-        font-size: 3.5rem;
-    }
-
-    .hero-section h1::after {
-        width: 60px;
-    }
-
-    .hero-section .description {
-        font-size: 1rem;
-        max-width: 700px;
-    }
-
-    .cta-buttons {
-        flex-direction: row;
-        width: auto;
-        max-width: none;
-    }
-
-    .btn {
-        width: auto;
-    }
-
-    .elegant-heading {
-        margin-bottom: 60px;
-    }
-
-    .elegant-heading h2 {
-        font-size: 2.5rem;
-    }
-
-    .elegant-heading p {
-        font-size: 1.125rem;
-        max-width: 700px;
-    }
-
-    .elegant-divider {
-        width: 60px;
-        margin: 20px auto;
-    }
-
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 25px;
-        padding: 1.75rem;
-    }
-
-    .stat-item {
-        padding: 30px 20px;
-    }
-
-    .feature-content h3 {
-        font-size: 22px;
-    }
-
-    .features-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .countdown-section {
-        padding: 60px 0;
-    }
-
-    .countdown-container {
-        padding: 30px;
-        max-width: 700px;
-    }
-
-    .countdown-timer {
-        gap: 25px;
-        margin: 35px 0;
-    }
-
-    .countdown-item:not(:last-child)::after {
-        right: -15px;
-        top: 10px;
-        font-size: 30px;
-    }
-
-    .countdown-value {
-        font-size: 40px;
-        width: 80px;
-        height: 80px;
-        margin-bottom: 12px;
-    }
-
-    .countdown-label {
-        font-size: 13px;
-        letter-spacing: 1.5px;
-    }
-
-    .next-season-info {
-        margin-top: 25px;
-        font-size: 17px;
-        padding: 12px 25px;
-    }
-
-    .faq-question {
-        padding: 22px 25px;
-        font-size: 17px;
-    }
-
-    .faq-answer-content {
-        padding: 0 25px 25px;
-        font-size: 15px;
-    }
-
-    .modal-content {
-        padding: 25px;
-        max-width: 450px;
-    }
-
-    .close-modal {
-        top: 12px;
-        right: 18px;
-        font-size: 22px;
-    }
-
-    .modal h2 {
-        margin-bottom: 22px;
-        font-size: 22px;
-    }
-
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    .form-group label {
-        margin-bottom: 7px;
-        font-size: 15px;
-    }
-
-    .form-group input[type="email"],
-    .form-group input[type="password"],
-    .form-group input[type="text"] {
-        padding: 11px 11px 11px 35px;
-        font-size: 15px;
-    }
-
-    .form-links {
-        margin-top: 18px;
-        gap: 9px;
-    }
-
-    .form-links a {
-        font-size: 14px;
-    }
-
-    .cookie-content {
-        padding: 1.25rem;
-        max-width: 90%;
-    }
-
-    .cookie-header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .cookie-header h3 {
-        font-size: 1.15rem;
-    }
-
-    .cookie-details-toggle {
-        align-self: center;
-    }
-
-    .cookie-option {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 0;
-    }
-
-    .cookie-option p {
-        max-width: 80%;
-        margin-bottom: 0;
-    }
-
-    .cookie-actions {
-        flex-direction: row;
-        justify-content: flex-end;
-        width: auto;
-    }
-
-    .cookie-actions button {
-        width: auto;
-        padding: 10px 20px;
-    }
-
-    .toast-container {
-        left: auto;
-        bottom: 15px;
-        right: 15px;
-    }
-
-    .toast {
-        width: auto;
-        min-width: 250px;
-        max-width: 350px;
-        padding: 14px;
-        transform: translateX(120%);
-    }
-
-}
-
-@media (min-width: 1024px) {
-    .hero-section h1 {
-        font-size: 2rem;
-    }
-
-    .hero-section .description {
-        font-size: 1rem;
-    }
-
-    .elegant-heading h2 {
-        font-size: 3rem;
-    }
-
-    .stats-section {
-        padding: 80px 0;
-        max-width: 1200px;
-        margin: 2rem auto 3rem;
-    }
-
-    .stats-container {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 30px;
-        padding: 2rem;
-    }
-
-    .stat-item {
-        padding: 40px 20px;
-    }
-
-    .stat-icon {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 25px;
-    }
-
-    .stat-icon i {
-        font-size: 28px;
-    }
-
-    .stat-value {
-        font-size: 48px;
-        margin-bottom: 10px;
-    }
-
-    .stat-label,
-    .feature-content p {
-        font-size: 16px;
-    }
-
-    .features-section {
-        padding: 100px 0;
-    }
-
-    .features-container {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
-        max-width: 1200px;
-    }
-
-    .feature-image {
-        height: 220px;
-    }
-
-    .feature-content {
-        padding: 30px;
-    }
-
-    .feature-content h3 {
-        font-size: 24px;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-    }
-
-    .feature-content h3::after {
-        width: 40px;
-        height: 3px;
-    }
-
-    .feature-item:hover .feature-content h3::after {
-        width: 60px;
-    }
-
-    .countdown-section {
-        padding: 80px 0;
-    }
-
-    .countdown-container {
-        max-width: 900px;
-        padding: 40px;
-    }
-
-    .countdown-timer {
-        gap: 30px;
-        margin: 40px 0;
-    }
-
-    .countdown-item:not(:last-child)::after {
-        right: -20px;
-        font-size: 36px;
-    }
-
-    .countdown-value {
-        font-size: 48px;
-        width: 90px;
-        height: 90px;
-        margin-bottom: 15px;
-    }
-
-    .countdown-label {
-        font-size: 14px;
-        letter-spacing: 2px;
-    }
-
-    .next-season-info {
-        margin-top: 30px;
-        font-size: 18px;
-        padding: 12px 30px;
-    }
-
-    .faq-section {
-        padding: 100px 0;
-    }
-
-    .faq-container {
-        gap: 20px;
-        max-width: 900px;
-    }
-
-    .faq-question {
-        padding: 25px 30px;
-        font-size: 18px;
-    }
-
-    .faq-question i {
-        width: 24px;
-        height: 24px;
-    }
-
-    .faq-answer-content {
-        padding: 0 30px 30px;
-        font-size: 16px;
-    }
-
-    .modal-content {
-        padding: 30px;
-        max-width: 900px;
-    }
-
-    .split-modal {
-        display: flex;
-    }
-
-    .modal-image {
-        display: block;
-        width: 50%;
-        height: auto;
-        min-height: 450px;
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-    }
-
-    .modal-image .overlay {
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-    }
-
-    .modal-form {
-        width: 50%;
-        padding: 30px;
-    }
-
-    .close-modal {
-        top: 15px;
-        right: 20px;
-        font-size: 24px;
-    }
-
-    .modal h2 {
-        margin-bottom: 25px;
-        font-size: 24px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        margin-bottom: 8px;
-        font-size: 16px;
-    }
-
-    .form-group input[type="email"],
-    .form-group input[type="password"],
-    .form-group input[type="text"] {
-        padding: 12px 12px 12px 40px;
-        font-size: 16px;
-    }
-
-    .form-checkbox {
-        gap: 10px;
-    }
-
-    .form-links {
-        margin-top: 20px;
-        gap: 10px;
-    }
-
-    .form-links a {
-        font-size: 14px;
-    }
-
-    .cookie-content {
-        max-width: 1200px;
-        padding: 1.5rem;
-    }
-
-    .cookie-header h3 {
-        font-size: 1.2rem;
-    }
-
-    .cookie-details-toggle {
-        font-size: 0.85rem;
-    }
-
-    .cookie-details {
-        margin: 1rem 0;
-    }
-
-    .cookie-option h4 {
-        font-size: 1rem;
-    }
-
-    .cookie-option p {
-        font-size: 0.9rem;
-    }
-
-    .cookie-switch {
-        width: 48px;
-        height: 24px;
-    }
-
-    .cookie-switch label:before {
-        height: 18px;
-        width: 18px;
-    }
-
-    .cookie-switch input:checked + label:before {
-        transform: translateX(24px);
-    }
-
-    .cookie-actions {
-        margin-top: 1.5rem;
-    }
-
-    .toast-container {
-        bottom: 20px;
-        right: 20px;
-        gap: 10px;
-    }
-
-    .toast {
-        padding: 16px;
-    }
-
-    .toast-icon {
-        margin-right: 12px;
-        width: 24px;
-        height: 24px;
-    }
-
-    .toast-message {
-        font-size: 0.9rem;
-    }
-
-    .toast-close {
-        font-size: 18px;
-        margin-left: 8px;
-    }
-
-    .toast-success,
-    .toast-error,
-    .toast-info,
-    .toast-warning {
-        border-left-width: 4px;
-    }
-}
-
-  /* Legal Pages Styling (für Impressum, Datenschutz, AGB) */
+/* Legal Pages Styling - Optimized */
 .legal-section {
     padding: 40px 0;
     position: relative;
@@ -1604,19 +1122,20 @@
 }
 
 .legal-card {
-    background: rgba(26, 26, 26, 0.5);
+    background: var(--card-bg);
     border-radius: 15px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: var(--blur-effect);
     overflow: hidden;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
     position: relative;
+    will-change: transform;
 }
 
 .legal-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    transform: var(--hover-transform);
+    box-shadow: var(--card-hover-shadow);
     border-color: rgba(var(--primary-rgb), 0.2);
 }
 
@@ -1644,7 +1163,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: var(--card-border);
 }
 
 .legal-card-header i {
@@ -1668,7 +1187,7 @@
 }
 
 .legal-card-content {
-    padding: 20px;
+    padding: var(--card-padding);
     color: var(--text-muted);
     font-size: 14px;
     line-height: 1.6;
@@ -1739,15 +1258,13 @@
     }
 }
 
-/* Mobile-Optimierungen */
-/* Mobile-Optimierungen */
+/* Media Queries - Optimized and consolidated */
 @media (max-width: 767px) {
-    /* Angepasste Animation für mobile Geräte */
+    /* Mobile optimizations */
     .legal-card.animate-fadeUp {
         animation-duration: 0.6s;
     }
     
-    /* Optimierte Touch-Interaktion */
     .legal-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
@@ -1755,7 +1272,6 @@
         min-height: 44px;
     }
     
-    /* Anpassungen für legal-card-header in mobiler Ansicht */
     .legal-card-header {
         padding: 12px 15px;
         flex-wrap: wrap;
@@ -1771,13 +1287,11 @@
         line-height: 1.3;
     }
     
-    /* Sanfterer Hover-Effekt für Touch-Geräte */
     .legal-card:active {
         transform: translateY(-3px) scale(0.99);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
     
-    /* Kleinunternehmer-Hinweis für mobile Geräte optimieren */
     .kleinunternehmer-hinweis {
         padding: 8px 12px;
         margin-top: 12px !important;
@@ -1789,9 +1303,174 @@
         font-size: 18px;
         margin-bottom: 5px;
     }
+    
+    /* Ensure touch targets are big enough */
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+    }
 }
-/* Tablet-Ansicht */
+
 @media (min-width: 768px) {
+    /* Tablet optimizations */
+    .hero-section {
+        padding: 80px 0;
+    }
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+    }
+
+    .hero-section h1::after {
+        width: 60px;
+    }
+
+    .hero-section .description {
+        font-size: 1rem;
+        max-width: 700px;
+    }
+
+    .cta-buttons {
+        flex-direction: row;
+        width: auto;
+        max-width: none;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .elegant-heading {
+        margin-bottom: 60px;
+    }
+
+    .elegant-heading h2 {
+        font-size: 2.5rem;
+    }
+
+    .elegant-heading p {
+        font-size: 1.125rem;
+        max-width: 700px;
+    }
+
+    .elegant-divider {
+        width: 60px;
+        margin: 20px auto;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        padding: 1.75rem;
+    }
+
+    .stat-item {
+        padding: 30px 20px;
+    }
+    
+    .feature-content h3 {
+        font-size: 22px;
+    }
+
+    .features-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Other components */
+    .countdown-section {
+        padding: 60px 0;
+    }
+
+    .countdown-container {
+        padding: 30px;
+        max-width: 700px;
+    }
+
+    .countdown-timer {
+        gap: 25px;
+        margin: 35px 0;
+    }
+
+    .countdown-item:not(:last-child)::after {
+        right: -15px;
+        top: 10px;
+        font-size: 30px;
+    }
+
+    .countdown-value {
+        font-size: 40px;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 12px;
+    }
+
+    .countdown-label {
+        font-size: 13px;
+        letter-spacing: 1.5px;
+    }
+
+    .next-season-info {
+        margin-top: 25px;
+        font-size: 17px;
+        padding: 12px 25px;
+    }
+
+    .faq-question {
+        padding: 22px 25px;
+        font-size: 17px;
+    }
+
+    .faq-answer-content {
+        padding: 0 25px 25px;
+        font-size: 15px;
+    }
+
+    /* Modal, Cookies and Toast optimizations */
+    .modal-content {
+        padding: 25px;
+        max-width: 450px;
+    }
+    
+    .cookie-content {
+        padding: 1.25rem;
+        max-width: 90%;
+    }
+
+    .cookie-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .cookie-option {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+    }
+
+    .cookie-actions {
+        flex-direction: row;
+        justify-content: flex-end;
+        width: auto;
+    }
+    
+    .toast-container {
+        left: auto;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .toast {
+        width: auto;
+        min-width: 250px;
+        max-width: 350px;
+        padding: 14px;
+        transform: translateX(120%);
+    }
+    
+    /* Legal pages optimizations */
     .legal-section {
         padding: 60px 0;
     }
@@ -1823,8 +1502,88 @@
     }
 }
 
-/* Desktop-Ansicht */
 @media (min-width: 1024px) {
+    /* Desktop optimizations */
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .elegant-heading h2 {
+        font-size: 3rem;
+    }
+
+    .stats-section {
+        padding: 80px 0;
+        max-width: 1200px;
+        margin: 2rem auto 3rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        padding: 2rem;
+    }
+
+    .stat-item {
+        padding: 40px 20px;
+    }
+
+    .stat-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 25px;
+    }
+
+    .stat-value {
+        font-size: 48px;
+        margin-bottom: 10px;
+    }
+
+    .stat-label,
+    .feature-content p {
+        font-size: 16px;
+    }
+
+    .features-section {
+        padding: 100px 0;
+    }
+
+    .features-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        max-width: 1200px;
+    }
+
+    /* Modal optimizations */
+    .modal-content {
+        padding: 30px;
+        max-width: 900px;
+    }
+
+    .split-modal {
+        display: flex;
+    }
+
+    .modal-image {
+        display: block;
+        width: 50%;
+        height: auto;
+        min-height: 450px;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+    
+    .modal-form {
+        width: 50%;
+        padding: 30px;
+    }
+    
+    /* Cookie optimizations */
+    .cookie-content {
+        max-width: 1200px;
+        padding: 1.5rem;
+    }
+    
+    /* Legal pages optimizations */
     .legal-section {
         padding: 80px 0;
     }
@@ -1834,31 +1593,9 @@
         gap: 30px;
         max-width: 1200px;
     }
-    
-    .legal-card-header {
-        padding: 22px 28px;
-    }
-    
-    .legal-card-header i {
-        font-size: 26px;
-    }
-    
-    .legal-card-header h3 {
-        font-size: 22px;
-    }
-    
-    .legal-card-content {
-        padding: 28px;
-        font-size: 16px;
-    }
-    
-    .kleinunternehmer-hinweis {
-        padding: 15px 20px;
-        margin-top: 20px !important;
-    }
 }
 
-/* Print-Optimierungen für rechtliche Seiten */
+/* Print styles */
 @media print {
     .legal-card {
         break-inside: avoid;
