@@ -1,0 +1,340 @@
+/* agb.css - Styling für die AGB-Seite */
+
+/* Hauptcontainer für AGB */
+.AgbSection {
+    padding: 40px 0;
+    position: relative;
+}
+
+.AgbContainer {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Inhaltsverzeichnis */
+.AgbToc {
+    background: var(--card-bg);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.AgbToc:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.AgbTocHeader {
+    background: linear-gradient(135deg, rgba(255, 138, 0, 0.15) 0%, rgba(255, 138, 0, 0.05) 100%);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.AgbTocHeader i {
+    font-size: 20px;
+    color: var(--primary);
+}
+
+.AgbTocHeader h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.AgbTocContent {
+    padding: 20px;
+}
+
+.AgbTocList {
+    margin: 0;
+    padding: 0 0 0 20px;
+    list-style-position: outside;
+}
+
+.AgbTocList li {
+    margin-bottom: 10px;
+}
+
+.AgbTocList li:last-child {
+    margin-bottom: 0;
+}
+
+.AgbTocList a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px 0;
+}
+
+.AgbTocList a:hover {
+    color: var(--primary);
+}
+
+/* AGB Artikel */
+.AgbArticles {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.AgbArticle {
+    background: var(--card-bg);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.AgbArticle:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.AgbArticle::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.AgbArticle:hover::before {
+    opacity: 1;
+}
+
+.AgbArticleHeader {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.AgbArticleNumber {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-light);
+    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.3);
+}
+
+.AgbArticleHeader h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.AgbArticleContent {
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.AgbArticleContent p {
+    margin-bottom: 15px;
+}
+
+.AgbArticleContent p:last-child {
+    margin-bottom: 0;
+}
+
+.AgbArticleContent strong {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.AgbArticleContent a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.AgbArticleContent a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+/* Listen innerhalb der AGB */
+.AgbList {
+    margin: 10px 0 15px 20px;
+    padding: 0;
+    list-style-position: outside;
+}
+
+.AgbList li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 5px;
+}
+
+.AgbList li:last-child {
+    margin-bottom: 0;
+}
+
+/* Download-Button */
+.AgbDownload {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 10px;
+}
+
+.AgbDownload .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+}
+
+/* Smooth scrolling für Anchor-Links */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .AgbContainer {
+        width: 90%;
+    }
+
+    .AgbTocHeader {
+        padding: 20px 25px;
+    }
+
+    .AgbTocContent {
+        padding: 25px;
+    }
+
+    .AgbTocList a {
+        font-size: 16px;
+    }
+
+    .AgbArticleHeader {
+        padding: 25px;
+    }
+
+    .AgbArticleContent {
+        padding: 25px;
+        font-size: 15px;
+    }
+
+    .AgbArticleHeader h3 {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .AgbContainer {
+        width: 95%;
+        max-width: 1400px;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 40px;
+    }
+
+    .AgbToc {
+        width: 280px;
+        position: sticky;
+        top: 100px;
+        align-self: flex-start;
+        flex-shrink: 0;
+    }
+
+    .AgbArticles {
+        flex: 1;
+        max-width: 1000px;
+    }
+
+    .AgbArticleContent {
+        font-size: 14px;
+        padding: 30px;
+    }
+
+    .AgbArticleHeader {
+        padding: 25px 30px;
+    }
+
+    .AgbArticleHeader h3 {
+        font-size: 22px;
+    }
+}
+
+/* Print-Styles */
+@media print {
+    .AgbToc, .AgbDownload, header, footer, .bg-container {
+        display: none !important;
+    }
+
+    .AgbArticle {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        margin-bottom: 20px;
+    }
+
+    .AgbArticleHeader {
+        background: #f5f5f5 !important;
+        color: #333 !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+
+    .AgbArticleNumber {
+        background: #ff8a00 !important;
+        color: white !important;
+        box-shadow: none !important;
+    }
+
+    .AgbArticleContent {
+        color: #333 !important;
+    }
+
+    .AgbArticleContent strong {
+        color: #000 !important;
+    }
+
+    .AgbArticleContent a {
+        color: #ff8a00 !important;
+        text-decoration: underline !important;
+    }
+
+    .elegant-heading h1 {
+        color: #000 !important;
+        -webkit-text-fill-color: #000 !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
