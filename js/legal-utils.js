@@ -42,19 +42,8 @@ window.legalUtils = (function() {
     function initTocScrolling(pageType) {
         let tocSelector;
         
-        switch(pageType) {
-            case 'agb':
-                tocSelector = '.AgbTocList a';
-                break;
-            case 'datenschutz':
-                tocSelector = '.datenschutz-toc-list a';
-                break;
-            case 'impressum':
-                tocSelector = '.impressum-toc-list a';
-                break;
-            default:
-                return;
-        }
+        // Universeller Selektor für legal.css
+        tocSelector = '.legal-toc-list a';
         
         const tocLinks = document.querySelectorAll(tocSelector);
         
@@ -116,7 +105,12 @@ window.legalUtils = (function() {
                 downloadButtonId = 'agbDownloadButton';
                 break;
             case 'datenschutz':
-                downloadButtonId = 'datenschutzDownloadButton';
+                // Prüfe beide mögliche IDs für Datenschutz-Download-Button
+                if (document.getElementById('datenschutzDownloadButton')) {
+                    downloadButtonId = 'datenschutzDownloadButton';
+                } else if (document.getElementById('legalDownloadButton')) {
+                    downloadButtonId = 'legalDownloadButton';
+                }
                 break;
             default:
                 return; // Wenn kein PDF-Download erforderlich ist
@@ -242,24 +236,24 @@ window.legalUtils = (function() {
                     case 'agb':
                         title = 'Allgemeine Geschäftsbedingungen - Kickerscup';
                         subject = 'AGB';
-                        articleSelector = '.AgbArticle';
-                        headerSelector = '.AgbArticleHeader h3';
-                        numberSelector = '.AgbArticleNumber';
+                        articleSelector = '.legal-article';
+                        headerSelector = '.legal-article-header h3';
+                        numberSelector = '.legal-article-number';
                         dateElement = document.querySelector('.elegant-heading p');
                         filename = 'Kickerscup-AGB.pdf';
                         headerText = 'Allgemeine Geschäftsbedingungen';
-                        contentSelectors = ['.AgbArticleContent p', '.AgbArticleContent ul li'];
+                        contentSelectors = ['.legal-article-content p', '.legal-article-content ul li'];
                         break;
                     case 'datenschutz':
                         title = 'Datenschutzerklärung - Kickerscup';
                         subject = 'Datenschutz';
-                        articleSelector = '.datenschutz-article';
-                        headerSelector = '.datenschutz-article-header h3';
-                        numberSelector = '.datenschutz-article-number';
+                        articleSelector = '.legal-article';
+                        headerSelector = '.legal-article-header h3';
+                        numberSelector = '.legal-article-number';
                         dateElement = document.querySelector('.elegant-heading p');
                         filename = 'Kickerscup-Datenschutz.pdf';
                         headerText = 'Datenschutzerklärung';
-                        contentSelectors = ['.datenschutz-article-content p', '.datenschutz-article-content h4', '.datenschutz-article-content ul li'];
+                        contentSelectors = ['.legal-article-content p', '.legal-article-content h4', '.legal-article-content ul li'];
                         break;
                     default:
                         throw new Error('Ungültiger Seitentyp');
@@ -269,7 +263,7 @@ window.legalUtils = (function() {
                 doc.setProperties({
                     title: title,
                     subject: subject,
-                    author: 'Kickerscup GmbH',
+                    author: 'Jan Steiger, Betreiber des Spiels „Kickerscup“.',
                     keywords: `${subject}, Kickerscup`,
                     creator: 'Kickerscup'
                 });
@@ -314,14 +308,38 @@ window.legalUtils = (function() {
                     doc.text(`${number}. ${header}`, 20, yPosition);
                     yPosition += 8;
                     
-                    // Unterschiedliche Behandlung der Inhalte je nach Elementtyp                    
-                    if (pageType === 'datenschutz') {
-                        // Datenschutz-spezifische Verarbeitung
-                        processDataProtectionContent(doc, article, yPosition);
-                    } else {
-                        // Standard-Verarbeitung für andere Dokumenttypen
-                        processArticleContent(doc, article, contentSelectors, yPosition);
-                    }
+                    // Artikelinhalt
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(11);
+                    doc.setTextColor(50, 50, 50);
+                    
+                    const paragraphs = article.querySelectorAll('.legal-article-content p');
+                    paragraphs.forEach(paragraph => {
+                        // Prüfen, ob ein Zeilenumbruch erforderlich ist
+                        if (yPosition > 270) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+
+                        // Text aufteilen und über mehrere Zeilen verteilen, falls nötig
+                        const textLines = doc.splitTextToSize(paragraph.textContent, 170);
+                        doc.text(textLines, 20, yPosition);
+                        yPosition += 6 * textLines.length;
+                    });
+                    
+                    const listItems = article.querySelectorAll('.legal-article-content ul li, .legal-list li');
+                    listItems.forEach(item => {
+                        // Prüfen, ob ein Zeilenumbruch erforderlich ist
+                        if (yPosition > 270) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+
+                        // Text mit Aufzählungszeichen
+                        const textLines = doc.splitTextToSize(`• ${item.textContent}`, 165);
+                        doc.text(textLines, 25, yPosition);
+                        yPosition += 6 * textLines.length;
+                    });
                     
                     // Abstand zwischen Artikeln
                     yPosition += 10;
@@ -344,79 +362,6 @@ window.legalUtils = (function() {
     }
     
     /**
-     * Verarbeitet den Inhalt eines Artikels für das PDF
-     * @param {Object} doc - Das PDF-Dokument
-     * @param {HTMLElement} article - Das Artikelelement
-     * @param {Array} selectors - Die Selektoren für die zu verarbeitenden Inhalte
-     * @param {number} startY - Die Startposition auf der Y-Achse
-     * @returns {number} Die neue Y-Position
-     */
-    function processArticleContent(doc, article, selectors, startY) {
-        let yPosition = startY;
-        
-        // Standardformatierung
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(11);
-        doc.setTextColor(50, 50, 50);
-        
-        selectors.forEach(selector => {
-            const elements = article.querySelectorAll(selector);
-            
-            elements.forEach(element => {
-                // Prüfen, ob ein Zeilenumbruch erforderlich ist
-                if (yPosition > 270) {
-                    doc.addPage();
-                    yPosition = 20;
-                }
-                
-                // Je nach Element-Typ formatieren
-                if (element.tagName.toLowerCase() === 'h4') {
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(12);
-                    doc.text(element.textContent, 20, yPosition);
-                    yPosition += 6;
-                } else if (element.tagName.toLowerCase() === 'li') {
-                    // Einrücken für Listenelemente
-                    const textLines = doc.splitTextToSize(`• ${element.textContent}`, 165);
-                    doc.text(textLines, 25, yPosition);
-                    yPosition += 6 * textLines.length;
-                } else {
-                    // Normaler Text
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(11);
-                    
-                    // Text aufteilen und über mehrere Zeilen verteilen
-                    const textLines = doc.splitTextToSize(element.textContent, 170);
-                    doc.text(textLines, 20, yPosition);
-                    yPosition += 6 * textLines.length;
-                }
-            });
-        });
-        
-        return yPosition;
-    }
-    
-    /**
-     * Spezielle Verarbeitung für Datenschutzinhalte
-     * @param {Object} doc - Das PDF-Dokument
-     * @param {HTMLElement} article - Das Artikelelement
-     * @param {number} startY - Die Startposition auf der Y-Achse
-     * @returns {number} Die neue Y-Position
-     */
-    function processDataProtectionContent(doc, article, startY) {
-        // Implementierung für datenschutzspezifische Elemente
-        // Diese Funktion könnte erweitert werden, um spezielle Formatierungen für 
-        // Datenschutzhinweise, Tabellen etc. zu implementieren
-        
-        // Vereinfachte Implementierung:
-        return processArticleContent(doc, article, [
-            '.datenschutz-article-content p',
-            '.datenschutz-article-content h4',
-            '.datenschutz-article-content ul li'
-        ], startY);
-    }
-    
-    /**
      * Fügt einen Footer zu allen Seiten des Dokuments hinzu
      * @param {Object} doc - Das PDF-Dokument
      */
@@ -427,7 +372,7 @@ window.legalUtils = (function() {
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
             doc.setTextColor(150, 150, 150);
-            doc.text('Kickerscup GmbH • Musterstraße 123 • 10115 Berlin • Deutschland', 20, 285);
+            doc.text('Jan Steiger, Betreiber des Spiels „Kickerscup“. • Pulverhäuserweg 72a • 64295 Darmstadt • Deutschland', 20, 285);
             doc.text(`Seite ${i} von ${pageCount}`, 170, 285);
         }
     }
@@ -437,13 +382,31 @@ window.legalUtils = (function() {
      */
     function initDatenschutzAnfrageModal() {
         const modalTrigger = document.getElementById('datenschutzFormular');
-        const modal = document.getElementById('datenschutzAnfrageModal');
+        // Korrigiert auf "legalFormular" basierend auf der HTML-Vorlage
+        if (!modalTrigger) {
+            const legalFormular = document.getElementById('legalFormular');
+            if (legalFormular) {
+                initializeModal(legalFormular, 'legalAnfrageModal');
+            }
+            return;
+        }
+        
+        initializeModal(modalTrigger, 'datenschutzAnfrageModal');
+    }
+    
+    /**
+     * Initialisiert ein Modal für Anfragen
+     * @param {HTMLElement} trigger - Das Auslöserelement
+     * @param {string} modalId - Die ID des Modals
+     */
+    function initializeModal(trigger, modalId) {
+        const modal = document.getElementById(modalId);
         const closeModalBtn = modal ? modal.querySelector('.close-modal') : null;
-        const form = modal ? modal.querySelector('.datenschutz-anfrage-form') : null;
+        const form = modal ? modal.querySelector('.legal-anfrage-form') : null;
         
-        if (!modalTrigger || !modal) return;
+        if (!trigger || !modal) return;
         
-        modalTrigger.addEventListener('click', function() {
+        trigger.addEventListener('click', function() {
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
@@ -543,7 +506,7 @@ window.legalUtils = (function() {
      * Initialisiert Links zu früheren Versionen der Datenschutzerklärung
      */
     function initVersionLinks() {
-        const versionLinks = document.querySelectorAll('.datenschutz-version-link');
+        const versionLinks = document.querySelectorAll('.legal-version-link');
         
         if (!versionLinks.length) return;
         
@@ -571,7 +534,7 @@ window.legalUtils = (function() {
     function initLegalCardTouchFeedback() {
         if (window.innerWidth > 767) return; // Nur für mobile Geräte
         
-        const legalCards = document.querySelectorAll('.legal-article, .AgbArticle, .datenschutz-article');
+        const legalCards = document.querySelectorAll('.legal-article');
         
         legalCards.forEach(card => {
             card.addEventListener('touchstart', function(e) {

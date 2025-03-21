@@ -8,16 +8,89 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('legal-utils.js ist nicht geladen oder enthält nicht die erwarteten Funktionen');
         // Fallback: Initialisiere die wichtigsten Funktionen direkt
         initPdfDownload();
+        initTocScrolling();
+        initLegalCardTouchFeedback();
     }
 });
 
-// Legacy-Funktion für den Fall, dass legal-utils nicht verfügbar ist
+// Fallback-Funktion: Initialisiert Scroll-Animation für Inhaltsverzeichnislinks
+function initTocScrolling() {
+    const tocLinks = document.querySelectorAll('.legal-toc-list a');
+    
+    tocLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Scroll mit Animation zum Ziel
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, // Offset für Header
+                    behavior: 'smooth'
+                }
+            
+        } catch (error) {
+            console.error('Fehler beim Erstellen des PDFs:', error);
+            if (typeof showToast === 'function') {
+                showToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
+            }
+        }
+    }, 300);
+};);
+                
+                // Hervorheben des Zielelements
+                targetElement.classList.add('highlight-section');
+                setTimeout(() => {
+                    targetElement.classList.remove('highlight-section');
+                }, 2000);
+                
+                // Setze Hash in der URL (für Direktlinks)
+                history.pushState(null, null, targetId);
+            }
+        });
+    });
+}
+
+// Fallback-Funktion: Initialisiert die PDF-Download-Funktionalität
 function initPdfDownload() {
     const downloadButton = document.getElementById('agbDownloadButton');
     
     if (downloadButton) {
         downloadButton.addEventListener('click', downloadAgbAsPdf);
     }
+}
+
+// Fallback-Funktion: Initialisiert Touch-Feedback für Legal Cards auf mobilen Geräten
+function initLegalCardTouchFeedback() {
+    if (window.innerWidth > 767) return; // Nur für mobile Geräte
+    
+    const legalCards = document.querySelectorAll('.legal-article');
+    
+    legalCards.forEach(card => {
+        card.addEventListener('touchstart', function(e) {
+            // Erstelle ein Ripple-Element
+            const ripple = document.createElement('span');
+            ripple.classList.add('touch-feedback');
+            
+            // Positioniere das Ripple an der Berührungsstelle
+            const rect = this.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            const y = e.touches[0].clientY - rect.top;
+            
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            // Füge das Ripple zum Element hinzu
+            this.appendChild(ripple);
+            
+            // Entferne das Ripple nach der Animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
 }
 
 // Funktion zum Herunterladen der AGB als PDF im globalen Scope definieren
@@ -28,7 +101,7 @@ window.downloadAgbAsPdf = function() {
         return;
     }
     
-    // Fallback-Implementierung (identisch zur alten Implementierung)
+    // Fallback-Implementierung (verändert für legal.css Kompatibilität)
     // Anzeigen eines Lade-Toasts
     if (typeof showToast === 'function') {
         showToast('PDF wird erstellt. Bitte warten...', 'info');
@@ -52,13 +125,13 @@ window.downloadAgbAsPdf = function() {
             doc.setProperties({
                 title: 'Allgemeine Geschäftsbedingungen - Kickerscup',
                 subject: 'AGB',
-                author: 'Kickerscup GmbH',
+                author: 'Jan Steiger, Betreiber des Spiels „Kickerscup“.',
                 keywords: 'AGB, Nutzungsbedingungen, Kickerscup',
                 creator: 'Kickerscup'
             });
             
             // Content für das PDF extrahieren
-            const articlesContainer = document.querySelector('.AgbArticles');
+            const articlesContainer = document.querySelector('.legal-articles');
             const titleElement = document.querySelector('.elegant-heading h1');
             const dateElement = document.querySelector('.elegant-heading p');
             
@@ -83,7 +156,7 @@ window.downloadAgbAsPdf = function() {
             
             // Artikelinhalt extrahieren und in PDF einfügen
             let yPosition = 45;
-            const articles = document.querySelectorAll('.AgbArticle');
+            const articles = document.querySelectorAll('.legal-article');
             
             articles.forEach((article, index) => {
                 // Wenn die Position zu weit unten ist, neue Seite anfangen
@@ -92,8 +165,8 @@ window.downloadAgbAsPdf = function() {
                     yPosition = 20;
                 }
                 
-                const header = article.querySelector('.AgbArticleHeader h3').textContent;
-                const number = article.querySelector('.AgbArticleNumber').textContent;
+                const header = article.querySelector('.legal-article-header h3').textContent;
+                const number = article.querySelector('.legal-article-number').textContent;
                 
                 // Artikelnummer und Header
                 doc.setFont('helvetica', 'bold');
@@ -103,7 +176,7 @@ window.downloadAgbAsPdf = function() {
                 yPosition += 8;
                 
                 // Artikelinhalt
-                const paragraphs = article.querySelectorAll('.AgbArticleContent p');
+                const paragraphs = article.querySelectorAll('.legal-article-content p');
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(11);
                 doc.setTextColor(50, 50, 50);
@@ -132,7 +205,7 @@ window.downloadAgbAsPdf = function() {
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(9);
                 doc.setTextColor(150, 150, 150);
-                doc.text('Kickerscup GmbH • Musterstraße 123 • 10115 Berlin • Deutschland', 20, 285);
+                doc.text('Jan Steiger, Betreiber des Spiels „Kickerscup“. • Pulverhäuserweg 72a • 64295 Darmstadt • Deutschland', 20, 285);
                 doc.text(`Seite ${i} von ${pageCount}`, 170, 285);
             }
             
