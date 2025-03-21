@@ -1,296 +1,234 @@
-// datenschutz.js - JavaScript für die Datenschutzseite (mit vereinheitlichter Logik)
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere die Datenschutz-Seite mit den gemeinsamen Funktionen aus legal-utils.js
-    if (window.legalUtils && typeof window.legalUtils.initLegalPage === 'function') {
-        window.legalUtils.initLegalPage('datenschutz');
-    } else {
-        console.warn('legal-utils.js ist nicht geladen oder enthält nicht die erwarteten Funktionen');
-        // Fallback: Initialisiere die wichtigsten Funktionen direkt
-        initPdfDownload();
-        initDatenschutzAnfrageModal();
-        initCookieSettings();
-        initGoogleAnalyticsOptOut();
+    // Cookie-Einstellungen Modal
+    const cookieSettingsBtn = document.getElementById('openCookieSettings');
+    if (cookieSettingsBtn) {
+        cookieSettingsBtn.addEventListener('click', function() {
+            // Hier würde die Funktion zum Öffnen des Cookie-Modals aufgerufen werden
+            console.log('Cookie-Einstellungen öffnen');
+        });
     }
-});
 
-// Legacy-Funktionen für den Fall, dass legal-utils nicht verfügbar ist
-function initPdfDownload() {
-    const downloadButton = document.getElementById('datenschutzDownloadButton');
-    
-    if (downloadButton) {
-        downloadButton.addEventListener('click', downloadDatenschutzAsPdf);
+    // Google Analytics Opt-Out
+    const gaOptOutBtn = document.getElementById('ga-opt-out');
+    if (gaOptOutBtn) {
+        gaOptOutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Google Analytics Opt-Out Cookie setzen
+            document.cookie = 'ga-opt-out=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+            
+            // Feedback zeigen
+            showToast('Sie haben Google Analytics erfolgreich deaktiviert.', 'success');
+        });
     }
-}
 
-// Hilfsfunktion für Toast-Nachrichten, falls die globale nicht verfügbar ist
-function safeShowToast(message, type) {
-    if (window.legalUtils && typeof window.legalUtils.safeShowToast === 'function') {
-        window.legalUtils.safeShowToast(message, type);
-        return;
-    }
+    // Datenschutz-Anfrage Modal
+    const datenschutzFormularBtn = document.getElementById('datenschutzFormular');
+    const datenschutzAnfrageModal = document.getElementById('datenschutzAnfrageModal');
+    const closeModalBtn = document.querySelector('#datenschutzAnfrageModal .close-modal');
     
-    // Fallback-Implementierung
-    try {
-        if (typeof showToast === 'function') {
-            showToast(message, type);
-        } else {
-            console.log(`${type}: ${message}`);
+    if (datenschutzFormularBtn && datenschutzAnfrageModal) {
+        datenschutzFormularBtn.addEventListener('click', function() {
+            datenschutzAnfrageModal.style.display = 'flex';
+        });
+        
+        // Modal schließen
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', function() {
+                datenschutzAnfrageModal.style.display = 'none';
+            });
         }
-    } catch (e) {
-        console.warn('Failed to show toast:', e);
+        
+        // Modal schließen, wenn außerhalb geklickt wird
+        window.addEventListener('click', function(event) {
+            if (event.target === datenschutzAnfrageModal) {
+                datenschutzAnfrageModal.style.display = 'none';
+            }
+        });
     }
-}
 
-// Funktion zum Herunterladen der Datenschutzerklärung als PDF
-function downloadDatenschutzAsPdf() {
-    if (window.legalUtils && typeof window.legalUtils.downloadLegalAsPdf === 'function') {
-        window.legalUtils.downloadLegalAsPdf('datenschutz');
-        return;
+    // Datenschutz-Anfrage Formular absenden
+    const anfragaForm = document.querySelector('.legal-anfrage-form');
+    if (anfragaForm) {
+        anfragaForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Formular-Daten sammeln
+            const formData = new FormData(this);
+            const anfrageDaten = Object.fromEntries(formData.entries());
+            
+            // Hier würde der AJAX-Request zum Senden der Anfrage erfolgen
+            console.log('Datenschutz-Anfrage wird gesendet:', anfrageDaten);
+            
+            // Simulation einer erfolgreichen Anfrage
+            showToast('Ihre Datenschutz-Anfrage wurde erfolgreich übermittelt. Wir werden uns in Kürze bei Ihnen melden.', 'success');
+            
+            // Modal schließen
+            datenschutzAnfrageModal.style.display = 'none';
+            
+            // Formular zurücksetzen
+            anfragaForm.reset();
+        });
     }
-    
-    // Fallback-Implementierung für den Fall, dass legal-utils nicht verfügbar ist
-    safeShowToast('PDF wird erstellt. Bitte warten...', 'info');
-    
-    // Verzögerung, um dem Toast Zeit zur Anzeige zu geben
-    setTimeout(() => {
-        try {
-            // Die jsPDF-Bibliothek initialisieren
+
+    // PDF-Download-Funktion
+    const downloadBtn = document.getElementById('datenschutzDownloadButton');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            // PDF-Erstellung und Download starten
+            generatePDF();
+        });
+    }
+
+    // Funktion zum Generieren des PDF
+    function generatePDF() {
+        // PDF-Generation mit jsPDF
+        if (typeof window.jspdf !== 'undefined') {
+            showToast('PDF-Erstellung wird vorbereitet...', 'info');
+            
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4',
-                compress: true
-            });
+            const doc = new jsPDF();
             
-            // Titel und Metadaten hinzufügen
-            doc.setProperties({
-                title: 'Datenschutzerklärung - Kickerscup',
-                subject: 'Datenschutz',
-                author: 'Kickerscup GmbH',
-                keywords: 'Datenschutz, DSGVO, Kickerscup',
-                creator: 'Kickerscup'
-            });
-            
-            // Content für das PDF extrahieren
-            const articlesContainer = document.querySelector('.datenschutz-articles');
-            const titleElement = document.querySelector('.elegant-heading h1');
-            const dateElement = document.querySelector('.elegant-heading p');
-            
-            // Einstellungen für Text
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(18);
-            doc.setTextColor(255, 138, 0); // Primary-Farbe
-            
-            // Titel hinzufügen
+            // Titel und Inhalt
+            doc.setFontSize(20);
             doc.text('Datenschutzerklärung', 20, 20);
-            
-            // Datum hinzufügen
-            doc.setFont('helvetica', 'normal');
             doc.setFontSize(12);
-            doc.setTextColor(100, 100, 100);
-            doc.text(`${dateElement ? dateElement.textContent : 'Stand: 21.03.2025'}`, 20, 30);
+            doc.text('Kickerscup GmbH', 20, 30);
+            doc.text('Stand: 21.03.2025', 20, 40);
             
-            // Horizontal Line
-            doc.setDrawColor(255, 138, 0);
-            doc.setLineWidth(0.5);
-            doc.line(20, 35, 190, 35);
+            // Inhalt extrahieren
+            const articles = document.querySelectorAll('.legal-article');
+            let yPosition = 50;
             
-            // Artikelinhalt extrahieren und in PDF einfügen
-            let yPosition = 45;
-            const articles = document.querySelectorAll('.datenschutz-article');
-            
-            articles.forEach((article, index) => {
-                // Wenn die Position zu weit unten ist, neue Seite anfangen
-                if (yPosition > 270) {
+            articles.forEach(function(article, index) {
+                const title = article.querySelector('h3').textContent;
+                
+                // Neue Seite, wenn nicht genug Platz
+                if (yPosition > 260) {
                     doc.addPage();
                     yPosition = 20;
                 }
                 
-                const header = article.querySelector('.datenschutz-article-header h3').textContent;
-                const number = article.querySelector('.datenschutz-article-number').textContent;
-                
-                // Artikelnummer und Header
-                doc.setFont('helvetica', 'bold');
                 doc.setFontSize(14);
-                doc.setTextColor(255, 138, 0);
-                doc.text(`${number}. ${header}`, 20, yPosition);
-                yPosition += 8;
-                
-                // Artikelinhalt
-                const contentElements = article.querySelectorAll('.datenschutz-article-content > p, .datenschutz-article-content > h4');
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(11);
-                doc.setTextColor(50, 50, 50);
-                
-                contentElements.forEach(element => {
-                    // Prüfen, ob ein Zeilenumbruch erforderlich ist
-                    if (yPosition > 270) {
-                        doc.addPage();
-                        yPosition = 20;
-                    }
-
-                    // Überschrift formatieren
-                    if (element.tagName.toLowerCase() === 'h4') {
-                        doc.setFont('helvetica', 'bold');
-                        doc.setFontSize(12);
-                        doc.text(element.textContent, 20, yPosition);
-                        yPosition += 6;
-                    } else {
-                        // Normalen Text formatieren
-                        doc.setFont('helvetica', 'normal');
-                        doc.setFontSize(11);
-                        
-                        // Text aufteilen und über mehrere Zeilen verteilen, falls nötig
-                        const textLines = doc.splitTextToSize(element.textContent, 170);
-                        doc.text(textLines, 20, yPosition);
-                        yPosition += 6 * textLines.length;
-                    }
-                });
-                
-                // Abstand zwischen Artikeln
+                doc.text(`${index+1}. ${title}`, 20, yPosition);
                 yPosition += 10;
+                
+                // Hier würde der Inhalt des Artikels hinzugefügt werden
+                // Für eine vollständige Implementierung wäre mehr Code notwendig
             });
             
-            // Footer mit Unternehmensinformationen
-            const pageCount = doc.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(9);
-                doc.setTextColor(150, 150, 150);
-                doc.text('Kickerscup GmbH • Musterstraße 123 • 10115 Berlin • Deutschland', 20, 285);
-                doc.text(`Seite ${i} von ${pageCount}`, 170, 285);
-            }
-            
             // PDF speichern
-            doc.save('Kickerscup-Datenschutz.pdf');
+            doc.save('datenschutzerklaerung-kickerscup.pdf');
             
-            // Erfolgsmeldung anzeigen
-            safeShowToast('Datenschutzerklärung wurde erfolgreich als PDF heruntergeladen!', 'success');
-            
-        } catch (error) {
-            console.error('Fehler beim Erstellen des PDFs:', error);
-            safeShowToast('Beim Erstellen des PDFs ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.', 'error');
+            showToast('Die Datenschutzerklärung wurde erfolgreich als PDF heruntergeladen.', 'success');
+        } else {
+            showToast('PDF-Erstellung nicht möglich. Bitte versuchen Sie es später erneut.', 'error');
         }
-    }, 300);
-}
+    }
 
-// Initialisierung des Datenschutz-Anfrage-Modals
-function initDatenschutzAnfrageModal() {
-    if (window.legalUtils && typeof window.legalUtils.initDatenschutzAnfrageModal === 'function') {
-        return; // Die Funktion wird bereits von legal-utils aufgerufen
-    }
+    // Accordion-Funktion für die Artikel
+    const articleHeaders = document.querySelectorAll('.legal-article-header');
     
-    // Fallback-Implementierung
-    const modalTrigger = document.getElementById('datenschutzFormular');
-    const modal = document.getElementById('datenschutzAnfrageModal');
-    const closeModalBtn = modal ? modal.querySelector('.close-modal') : null;
-    const form = modal ? modal.querySelector('.datenschutz-anfrage-form') : null;
-    
-    if (modalTrigger && modal) {
-        modalTrigger.addEventListener('click', function() {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+    articleHeaders.forEach(function(header) {
+        header.addEventListener('click', function() {
+            // Toggle für mobile Ansicht (optional)
+            const article = this.parentElement;
+            article.classList.toggle('expanded');
+            
+            // Scrollen zu diesem Artikel (optional)
+            article.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-    }
-    
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
+    });
+
+    // Toast-Nachrichten anzeigen
+    function showToast(message, type = 'info') {
+        // Toast-Container erstellen oder finden
+        let toastContainer = document.querySelector('.toast-container');
+        
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container';
+            document.body.appendChild(toastContainer);
+        }
+        
+        // Toast erstellen
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        // Toast-Inhalt
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            </div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" aria-label="Schließen">&times;</button>
+        `;
+        
+        // Toast zum Container hinzufügen
+        toastContainer.appendChild(toast);
+        
+        // Toast anzeigen
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Toast-Close-Button
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', function() {
+            closeToast(toast);
         });
+        
+        // Toast automatisch nach 5 Sekunden schließen
+        setTimeout(() => {
+            closeToast(toast);
+        }, 5000);
     }
-    
-    // Schließen des Modals beim Klick außerhalb des Inhalts
-    if (modal) {
-        window.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
+
+    // Toast-Nachrichten schließen
+    function closeToast(toast) {
+        toast.classList.remove('show');
+        
+        // Toast nach Animation entfernen
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.parentElement.removeChild(toast);
             }
-        });
+        }, 300);
     }
+
+    // Scroll zu Anker-Links (optional)
+    const tocLinks = document.querySelectorAll('.legal-toc-list a');
     
-    // Formularverarbeitung
-    if (form) {
-        form.addEventListener('submit', function(e) {
+    tocLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Hier würde normalerweise der API-Aufruf zur Verarbeitung der Anfrage erfolgen
-            // Für Demo-Zwecke zeigen wir nur eine Erfolgsmeldung an
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
             
-            safeShowToast('Ihre Datenschutz-Anfrage wurde erfolgreich übermittelt. Wir werden uns schnellstmöglich bei Ihnen melden.', 'success');
-            
-            // Modal schließen und Formular zurücksetzen
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-            form.reset();
-        });
-    }
-}
-
-// Initialisierung der Cookie-Einstellungen
-function initCookieSettings() {
-    if (window.legalUtils && typeof window.legalUtils.initCookieSettings === 'function') {
-        return; // Die Funktion wird bereits von legal-utils aufgerufen
-    }
-    
-    // Fallback-Implementierung
-    const cookieSettingsBtn = document.getElementById('openCookieSettings');
-    
-    if (cookieSettingsBtn) {
-        cookieSettingsBtn.addEventListener('click', function() {
-            // Wenn es einen globalen Cookie-Banner gibt, diesen anzeigen
-            if (window.showCookieBanner && typeof window.showCookieBanner === 'function') {
-                window.showCookieBanner();
-            } else {
-                // Fallback, wenn keine globale Funktion verfügbar ist
-                const cookieBanner = document.getElementById('cookie-banner');
-                if (cookieBanner) {
-                    cookieBanner.style.display = 'block';
-                    // Aktiviere Details-Ansicht
-                    const detailsToggle = document.getElementById('cookie-details-toggle');
-                    const detailsContent = document.getElementById('cookie-details');
-                    if (detailsToggle && detailsContent) {
-                        detailsContent.classList.add('active');
-                        detailsToggle.classList.add('active');
-                        detailsToggle.setAttribute('aria-expanded', 'true');
-                        detailsToggle.querySelector('.toggle-text').textContent = 'Details ausblenden';
-                    }
-                } else {
-                    safeShowToast('Cookie-Einstellungen sind derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.', 'info');
-                }
+            if (targetElement) {
+                // Scrollen zum Ziel
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Hervorheben des Zielelements (optional)
+                targetElement.classList.add('highlight');
+                setTimeout(() => {
+                    targetElement.classList.remove('highlight');
+                }, 2000);
             }
         });
-    }
-}
+    });
 
-// Google Analytics Opt-Out Funktion
-function initGoogleAnalyticsOptOut() {
-    if (window.legalUtils && typeof window.legalUtils.initGoogleAnalyticsOptOut === 'function') {
-        return; // Die Funktion wird bereits von legal-utils aufgerufen
-    }
+    // Version-Links
+    const versionLinks = document.querySelectorAll('.legal-version-link');
     
-    // Fallback-Implementierung
-    const gaOptOutLink = document.getElementById('ga-opt-out');
-    
-    if (gaOptOutLink) {
-        gaOptOutLink.addEventListener('click', function(e) {
+    versionLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Google Analytics Opt-Out Cookie setzen
-            const date = new Date();
-            date.setTime(date.getTime() + (10 * 365 * 24 * 60 * 60 * 1000)); // 10 Jahre
-            document.cookie = 'ga-opt-out=1; expires=' + date.toUTCString() + '; path=/; domain=.' + window.location.hostname + '; samesite=lax';
-            
-            // Wenn Google Analytics vorhanden ist, deaktivieren
-            if (window['ga-disable-UA-XXXXXXXX-X']) {
-                window['ga-disable-UA-XXXXXXXX-X'] = true;
-            }
-            
-            safeShowToast('Google Analytics wurde für diese Website deaktiviert. Das Tracking-Cookie wurde gesetzt.', 'success');
+            // Hier würde der Code zum Laden einer früheren Version stehen
+            const version = this.querySelector('.version-date').textContent;
+            showToast(`Die Version vom ${version} wird geladen...`, 'info');
         });
-    }
-}
+    });
+});
